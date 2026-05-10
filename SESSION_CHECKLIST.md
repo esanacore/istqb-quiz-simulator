@@ -74,7 +74,25 @@ It is intended to keep work practical, sequenced, and verifiable.
 
 ---
 
-## 8. End-Of-Session Closeout
+## 8. Repository Readiness
+
+- add CI workflow if the repo is becoming shareable
+- add issue templates if future iteration is expected
+- prepare release notes if the current state is a real milestone
+- verify repo metadata guidance is ready for manual GitHub setup
+
+---
+
+## 9. AI Handoff Readiness
+
+- update agent instructions
+- update Copilot instructions
+- add a bounded backlog of safe next tasks
+- ensure docs tell future assistants where logic, data, and tests belong
+
+---
+
+## 10. End-Of-Session Closeout
 
 - summarize the current state
 - note what was verified

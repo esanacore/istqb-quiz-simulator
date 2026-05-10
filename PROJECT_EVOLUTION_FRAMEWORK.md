@@ -273,7 +273,38 @@ This keeps the repository cleaner and easier to manage over time.
 
 ---
 
-## 16. Verify At Each Meaningful Stage
+## 16. Add GitHub Operational Scaffolding
+
+Before handing a project off for broader use or continued maintenance, add:
+
+- GitHub Actions workflows for basic validation
+- issue templates
+- release notes
+- `.gitignore`
+- clear repository metadata guidance
+
+This turns a cleaned-up local project into a more usable repository.
+
+---
+
+## 17. Prepare For AI Handoff
+
+If the project will continue evolving with AI assistance, add:
+
+- repo-level agent instructions
+- Copilot-specific instructions
+- a bounded backlog of next tasks
+
+This reduces drift and helps future AI work stay aligned with:
+
+- architecture
+- testing expectations
+- content provenance rules
+- documentation standards
+
+---
+
+## 18. Verify At Each Meaningful Stage
 
 After important changes:
 
@@ -286,7 +317,7 @@ Verification should happen continuously, not only at the end.
 
 ---
 
-## 17. Use This As A Repeatable Session Pattern
+## 19. Use This As A Repeatable Session Pattern
 
 For future projects, a strong default session sequence is:
 
@@ -303,11 +334,13 @@ For future projects, a strong default session sequence is:
 11. modularize
 12. improve docs
 13. add repo hygiene
-14. rerun verification
+14. add GitHub operational scaffolding
+15. prepare AI handoff materials
+16. rerun verification
 
 ---
 
-## 18. Guiding Principles
+## 20. Guiding Principles
 
 - **Work from current truth, not idealized assumptions.**
 - **Stabilize before scaling.**
@@ -316,11 +349,13 @@ For future projects, a strong default session sequence is:
 - **Extract testable logic early.**
 - **Polish after workflow works.**
 - **Document once structure is real.**
+- **Prepare the repo, not just the code.**
+- **Constrain future AI work with good instructions and a bounded backlog.**
 - **Leave the repo cleaner than you found it.**
 
 ---
 
-## 19. How To Use This Document
+## 21. How To Use This Document
 
 For a future project, you can use this file in three ways:
 
@@ -342,7 +377,7 @@ Give this file to a coding assistant or collaborator and ask them to:
 
 ---
 
-## 20. Optional Future Companion Docs
+## 22. Optional Future Companion Docs
 
 If you want to turn this into a fuller reusable methodology, add:
 

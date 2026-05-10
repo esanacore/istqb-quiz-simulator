@@ -130,10 +130,29 @@ You can reuse this prompt shape in many projects:
 
 ---
 
-## 10. Collaboration Principles
+## 10. Add A Controlled Handoff
+
+When you expect AI to continue iterating after the initial cleanup, prepare:
+
+- repo-level instructions
+- Copilot or assistant-specific instructions
+- a bounded task backlog
+
+This is important because AI performs better when:
+
+- priorities are explicit
+- architecture boundaries are stated
+- “safe next tasks” are enumerated
+
+Without that, later AI work is more likely to wander or regress structure.
+
+---
+
+## 11. Collaboration Principles
 
 - ask for inspection before change
 - ask for implementation, not just suggestions
 - ask for verification
 - ask for structure, not just feature work
 - ask for docs that match reality
+- give future AI a bounded backlog instead of an open-ended “improve this” prompt

@@ -1,0 +1,13 @@
+# Python bytecode and interpreter caches
+__pycache__/
+*.py[cod]
+
+# Local test scratch data
+.testdata/
+
+# Runtime-generated local state
+exam_history.json
+
+# Common local environment noise
+.DS_Store
+Thumbs.db

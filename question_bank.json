@@ -1,0 +1,1154 @@
+[
+  {
+    "q": "Which of the following is NOT an example of a shift-left practice?",
+    "options": [
+      "Reviewing requirements before they are formally accepted",
+      "Writing a component test before the code exists",
+      "Executing a performance efficiency test during component testing",
+      "Writing test scripts before configuration management is set up"
+    ],
+    "answer": "Writing test scripts before configuration management is set up",
+    "explanation": "Shift-left means moving useful testing activities earlier. Creating test scripts before establishing configuration management is not a good example because those scripts should themselves be managed under configuration control.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 11"
+  },
+  {
+    "q": "What is the strongest reason to run retrospectives at the end of each release cycle?",
+    "options": [
+      "Clients expect modern teams to use them",
+      "They replace the need for direct end-user product feedback",
+      "They identify process weaknesses and feed continuous improvement",
+      "They mainly reinforce values such as courage and respect"
+    ],
+    "answer": "They identify process weaknesses and feed continuous improvement",
+    "explanation": "Retrospectives are about improving how the team works. Their main value is uncovering process weaknesses and turning them into follow-up improvement actions.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 12"
+  },
+  {
+    "q": "Which mapping between failure type and test level is correct?",
+    "options": [
+      "Business-needs failure to acceptance testing, component-communication failure to component integration testing, code logic failure to component testing, business-rule failure to system testing",
+      "Business-needs failure to acceptance testing, component-communication failure to component integration testing, code logic failure to system testing, business-rule failure to component testing",
+      "Business-needs failure to component integration testing, component-communication failure to component testing, code logic failure to acceptance testing, business-rule failure to system testing",
+      "Business-needs failure to system testing, component-communication failure to component integration testing, code logic failure to component testing, business-rule failure to acceptance testing"
+    ],
+    "answer": "Business-needs failure to acceptance testing, component-communication failure to component integration testing, code logic failure to component testing, business-rule failure to system testing",
+    "explanation": "Acceptance testing checks business needs, component integration testing checks communication between components, component testing can reveal code logic failures, and system testing covers implemented business rules.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 13"
+  },
+  {
+    "q": "A user story has three acceptance criteria, each covered by its own test case. After rerunning tests across three versions, which tests are regression tests if previously passed tests are rerun on later versions?",
+    "options": [
+      "Only tests 4, 7, 8, and 9",
+      "Only tests 5 and 7",
+      "Only tests 4, 6, 8, and 9",
+      "Only tests 5 and 6"
+    ],
+    "answer": "Only tests 5 and 7",
+    "explanation": "Regression tests re-execute functionality that had previously passed, to detect unintended side effects. In the referenced scenario, tests 5 and 7 fit that definition, while others are confirmation tests.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 14"
+  },
+  {
+    "q": "Which option is NOT a benefit of static testing?",
+    "options": [
+      "Defect management becomes cheaper because defects are easier to detect later in the SDLC",
+      "Fixing defects found statically is usually cheaper than fixing them after execution-based testing",
+      "Static testing can reveal coding defects dynamic testing alone might miss",
+      "Static testing can detect gaps and inconsistencies in requirements"
+    ],
+    "answer": "Defect management becomes cheaper because defects are easier to detect later in the SDLC",
+    "explanation": "Static testing is valuable partly because finding and fixing defects earlier is cheaper, not because later detection is easier or less expensive.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 15"
+  },
+  {
+    "q": "Which is a benefit of early and frequent feedback?",
+    "options": [
+      "It mainly improves the process only for future projects",
+      "It forces customers to prioritize requirements by risk",
+      "It provides a direct measure of change quality",
+      "It helps prevent misunderstandings about requirements"
+    ],
+    "answer": "It helps prevent misunderstandings about requirements",
+    "explanation": "Early and frequent feedback helps teams detect and correct misunderstandings sooner, especially around requirements and expectations.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 16"
+  },
+  {
+    "q": "A review process has a scribe, focuses on evaluating quality, is led by the author, includes individual preparation, and produces a review report. Which review type best fits?",
+    "options": [
+      "Informal review",
+      "Walkthrough",
+      "Technical review",
+      "Inspection"
+    ],
+    "answer": "Walkthrough",
+    "explanation": "A walkthrough is commonly led by the author and can include a scribe, individual preparation, and a documented report, while also focusing on evaluating quality.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 17"
+  },
+  {
+    "q": "Which statement is NOT a success factor for reviews?",
+    "options": [
+      "Participants dedicate adequate time to the review",
+      "Large work products are split into manageable parts",
+      "Participants avoid hostile or dismissive behavior",
+      "Failures found during the review are acknowledged and handled objectively"
+    ],
+    "answer": "Failures found during the review are acknowledged and handled objectively",
+    "explanation": "Reviews find defects in work products; they do not find runtime failures directly. The other options are genuine review success factors.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 18"
+  },
+  {
+    "q": "Which is a characteristic of experience-based test techniques?",
+    "options": [
+      "They derive tests mainly from detailed design structure",
+      "They measure coverage by items exercised in the code structure",
+      "They rely heavily on the tester’s knowledge of the software and business domain",
+      "They focus on finding deviations from documented requirements"
+    ],
+    "answer": "They rely heavily on the tester’s knowledge of the software and business domain",
+    "explanation": "Experience-based techniques use tester knowledge, intuition, prior defects, and domain understanding as a primary source for deriving tests.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 19"
+  },
+  {
+    "q": "An apartment search form has floor options and garden options, but only ground-floor apartments may have gardens. If you use equivalence partitioning to cover each valid floor and garden partition, what is the minimum number of test cases?",
+    "options": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "answer": "4",
+    "explanation": "Two tests are needed to cover the two valid garden partitions that only occur on ground floor, and two more cover the other floor partitions with no garden, for four total valid-partition tests.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 20"
+  },
+  {
+    "q": "You are asked to investigate and remove the causes of observed failures in a new system before release. Which activity are you performing?",
+    "options": [
+      "Debugging",
+      "Testing",
+      "Requirements elicitation",
+      "Defect management"
+    ],
+    "answer": "Debugging",
+    "explanation": "Debugging is the activity focused on finding, analyzing, and removing the causes of failures. Testing can reveal failures, but it does not itself fix their causes.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A1"
+  },
+  {
+    "q": "A tester prepares an exploratory session charter for the registration page, including the area to explore, time box, and goal of finding invalid-input handling defects. Which test activity produces this testware?",
+    "options": [
+      "Test planning",
+      "Test monitoring and control",
+      "Test analysis",
+      "Test design"
+    ],
+    "answer": "Test design",
+    "explanation": "A test charter is testware created during test design, where the test approach and intended exploration are defined.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A4"
+  },
+  {
+    "q": "Which example best shows how traceability supports testing after a change request is introduced?",
+    "options": [
+      "It proves the test suite is complete.",
+      "It directly calculates residual risk from test results alone.",
+      "It helps select the right regression tests through impact analysis.",
+      "It chooses detailed test data automatically from the test basis."
+    ],
+    "answer": "It helps select the right regression tests through impact analysis.",
+    "explanation": "Traceability supports impact analysis by linking changes to affected tests, which helps choose the right regression tests. It does not by itself prove completeness or compute residual risk.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A5"
+  },
+  {
+    "q": "What is the best reason for using independent testers?",
+    "options": [
+      "It makes the test team solely responsible for product quality.",
+      "External testers do not need to worry about delivery deadlines.",
+      "Independent testers should work in isolation from developers.",
+      "Independent testers can challenge assumptions developers make when specifications are ambiguous."
+    ],
+    "answer": "Independent testers can challenge assumptions developers make when specifications are ambiguous.",
+    "explanation": "Independence is valuable because another perspective can question assumptions and interpretations made by developers, especially when requirements are unclear or inconsistent.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A6"
+  },
+  {
+    "q": "Which statement correctly identifies advantages of DevOps?",
+    "options": [
+      "Faster release cycles and less need for automation",
+      "Constantly available executable software and cheaper framework setup",
+      "Faster time to market and continuously available executable software",
+      "Fewer regression tests are needed after refactoring"
+    ],
+    "answer": "Faster time to market and continuously available executable software",
+    "explanation": "DevOps supports faster release and continuous availability of executable software. It does not remove the need for automation investment, and regression testing demand does not decrease simply because code is refactored.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A8"
+  },
+  {
+    "q": "A requirement states that 95% of customer orders must be processed in under 10 seconds. You execute tests that submit many orders and measure processing time against that target. What type of testing is this?",
+    "options": [
+      "Functional testing",
+      "Non-functional performance testing",
+      "Usability testing",
+      "White-box structural testing"
+    ],
+    "answer": "Non-functional performance testing",
+    "explanation": "The test checks how well the system performs, not what business function it provides. That makes it non-functional testing focused on performance efficiency.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A9"
+  },
+  {
+    "q": "When an old system is being retired and its data must be moved to a replacement system, under which test type is testing that migration most likely performed?",
+    "options": [
+      "Maintenance testing",
+      "Regression testing",
+      "Reliability testing",
+      "Integration testing"
+    ],
+    "answer": "Maintenance testing",
+    "explanation": "Retiring or changing a live system often requires maintenance testing, including checking data migration to the new solution.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A10"
+  },
+  {
+    "q": "Which set of work products can be reviewed using static review techniques?",
+    "options": [
+      "Only business requirements and third-party executable code",
+      "Only schedules, budgets, and executable code",
+      "Business requirements, schedules, test budgets, and user stories with acceptance criteria",
+      "Only test budgets, executable code, and user stories"
+    ],
+    "answer": "Business requirements, schedules, test budgets, and user stories with acceptance criteria",
+    "explanation": "Reviewable work products include many textual and planning artifacts. Third-party executable code is not typically reviewed in the same way because it is delivered as executable software rather than a reviewable document or design artifact.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A11"
+  },
+  {
+    "q": "Which statement about formal reviews is true?",
+    "options": [
+      "Some formal reviews can be done with only one role.",
+      "Formal reviews consist of multiple defined activities.",
+      "The work product is usually first shared during the review meeting itself.",
+      "Defects found in reviews are not reported because no execution occurred."
+    ],
+    "answer": "Formal reviews consist of multiple defined activities.",
+    "explanation": "Formal reviews follow a defined process with several activities. Review materials should be distributed early, and defects found during reviews are still recorded and managed.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A13"
+  },
+  {
+    "q": "Which is a valid objective of testing?",
+    "options": [
+      "Prove the system has no remaining defects.",
+      "Guarantee no failures will happen in production.",
+      "Reduce product risk and increase confidence in quality.",
+      "Show that every possible input combination has been tested."
+    ],
+    "answer": "Reduce product risk and increase confidence in quality.",
+    "explanation": "Testing helps identify defects and failures, lowering risk and increasing confidence. It cannot prove the total absence of defects or exhaustively cover all combinations.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 1"
+  },
+  {
+    "q": "Which testing practice most directly contributes to project success?",
+    "options": [
+      "Involving testers throughout the SDLC so they can detect defects early in work products",
+      "Keeping testers away from developers so coding is not interrupted",
+      "Having end users improve defect reports during component integration testing",
+      "Assuming certified testers automatically design better tests than everyone else"
+    ],
+    "answer": "Involving testers throughout the SDLC so they can detect defects early in work products",
+    "explanation": "Early tester involvement improves understanding and helps expose defects sooner, which supports better outcomes across the lifecycle.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 2"
+  },
+  {
+    "q": "A regression suite has been reused unchanged for many iterations and has stopped finding new defects. Which testing principle best explains why this is a problem?",
+    "options": [
+      "Tests wear out",
+      "Absence-of-defects fallacy",
+      "Defect clustering",
+      "Exhaustive testing is impossible"
+    ],
+    "answer": "Tests wear out",
+    "explanation": "Repeatedly running the same regression tests without refreshing them eventually reduces their ability to uncover new defects.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 3"
+  },
+  {
+    "q": "Which activity is part of test analysis for a new payment feature?",
+    "options": [
+      "Estimating the effort required for integration testing",
+      "Deciding to test whether shared payment among multiple users works correctly",
+      "Using boundary value analysis to derive exact test data values",
+      "Comparing actual and expected results after execution and reporting a defect"
+    ],
+    "answer": "Deciding to test whether shared payment among multiple users works correctly",
+    "explanation": "Test analysis focuses on identifying test conditions. Effort estimation belongs to planning, detailed data derivation to design, and defect reporting to execution.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 4"
+  },
+  {
+    "q": "Which factors have the strongest influence on the chosen test approach?",
+    "options": [
+      "The SDLC, product risks, and regulatory requirements",
+      "Defect counts from older projects and test environment setup only",
+      "Product risks and environment setup only",
+      "Previous-project defect counts, regulations, and environment setup"
+    ],
+    "answer": "The SDLC, product risks, and regulatory requirements",
+    "explanation": "The lifecycle model, identified product risks, and external constraints such as regulations are major drivers of the test approach.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 5"
+  },
+  {
+    "q": "Which pair of tasks belongs mainly to the testing role?",
+    "options": [
+      "Configuring test environments and analyzing the test basis",
+      "Maintaining the product backlog and designing new feature solutions",
+      "Creating the test plan and maintaining the product backlog",
+      "Designing new feature solutions and analyzing the test basis"
+    ],
+    "answer": "Configuring test environments and analyzing the test basis",
+    "explanation": "Testers commonly configure test environments and analyze the test basis. Product backlog maintenance and solution design belong to other roles.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 6"
+  },
+  {
+    "q": "Which combination lists important tester skills?",
+    "options": [
+      "Creating product vision and organizing the whole team",
+      "Domain knowledge, teamwork, and critical thinking",
+      "Product vision, domain knowledge, and critical thinking",
+      "Teamwork and team planning only"
+    ],
+    "answer": "Domain knowledge, teamwork, and critical thinking",
+    "explanation": "Strong testers benefit from domain knowledge, being good collaborators, and thinking critically. Product vision and team-wide work planning are not primarily tester skills.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 7"
+  },
+  {
+    "q": "How does the whole-team approach show up between testers and business representatives?",
+    "options": [
+      "Business representatives choose the test automation approach",
+      "Testers define the test strategy for business representatives",
+      "Business representatives are outside the whole-team model",
+      "Testers collaborate with business representatives to create suitable acceptance tests"
+    ],
+    "answer": "Testers collaborate with business representatives to create suitable acceptance tests",
+    "explanation": "In a whole-team approach, testers work closely with business representatives to help define acceptance tests and expected quality outcomes.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 8"
+  },
+  {
+    "q": "In which SDLC models does the rule 'for every development activity there is a corresponding test activity' apply?",
+    "options": [
+      "Only sequential models",
+      "Only iterative models",
+      "Only iterative and incremental models",
+      "Sequential, incremental, and iterative models"
+    ],
+    "answer": "Sequential, incremental, and iterative models",
+    "explanation": "The principle of corresponding test activities applies across the major SDLC model families, not only one style.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 9"
+  },
+  {
+    "q": "Which statement best describes acceptance test-driven development (ATDD)?",
+    "options": [
+      "Acceptance criteria are usually written only in given/when/then form",
+      "ATDD mainly creates code-oriented component tests",
+      "Tests are created from acceptance criteria to drive software development",
+      "ATDD is defined mainly by describing desired behavior in a business-readable style"
+    ],
+    "answer": "Tests are created from acceptance criteria to drive software development",
+    "explanation": "ATDD uses acceptance criteria as the basis for tests that steer development before implementation is complete.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 10"
+  },
+  {
+    "q": "During a formal review, which activity may management perform?",
+    "options": [
+      "Taking overall responsibility as review leader",
+      "Deciding what is to be reviewed",
+      "Moderating review meetings",
+      "Recording review decisions as the scribe"
+    ],
+    "answer": "Deciding what is to be reviewed",
+    "explanation": "Management may decide the scope or target of the review. The review leader, moderator, and scribe each have different responsibilities.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A14"
+  },
+  {
+    "q": "A wine storage controller reports whether temperature is optimal at 12 degrees, too low below 12, and too high above 12. Using 3-point boundary value analysis, what is the minimal test set?",
+    "options": [
+      "11, 12, 13",
+      "10, 12, 14",
+      "10, 11, 12, 13, 14",
+      "10, 11, 13, 14"
+    ],
+    "answer": "10, 11, 12, 13, 14",
+    "explanation": "With 3-point BVA around the effective boundaries 11, 12, and 13, you need the boundary values and their neighbors, which yields 10 through 14.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A15"
+  },
+  {
+    "q": "Which statement about branch testing is correct?",
+    "options": [
+      "Programs with only unconditional branches need no tests for 100 percent branch coverage.",
+      "Exercising all unconditional branches guarantees 100 percent branch coverage.",
+      "100 percent statement coverage always implies 100 percent branch coverage.",
+      "100 percent branch coverage means all decision outcomes have been exercised."
+    ],
+    "answer": "100 percent branch coverage means all decision outcomes have been exercised.",
+    "explanation": "Each decision outcome is a branch, so full branch coverage requires every decision outcome to be executed at least once.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A16"
+  },
+  {
+    "q": "You assess every mobile banking screen against a general list of user-interface best practices. Which test technique best fits this work?",
+    "options": [
+      "Black-box testing",
+      "Exploratory testing",
+      "Checklist-based testing",
+      "Error guessing"
+    ],
+    "answer": "Checklist-based testing",
+    "explanation": "A fixed list of usability best practices being systematically checked corresponds to checklist-based testing.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A17"
+  },
+  {
+    "q": "Which option best describes collaborative user story writing?",
+    "options": [
+      "Testers and developers write stories, then business representatives approve them",
+      "Business representatives, developers, and testers create user stories together",
+      "Business representatives write stories and others only verify them later",
+      "User stories are considered collaborative if they satisfy INVEST properties"
+    ],
+    "answer": "Business representatives, developers, and testers create user stories together",
+    "explanation": "Collaborative story writing means the relevant stakeholders work together to create a shared understanding and shared vision.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A18"
+  },
+  {
+    "q": "A test plan states that component and component integration testing will be used, and critical components must reach 100 percent branch coverage. Which section of the test plan is this?",
+    "options": [
+      "Communication",
+      "Risk register",
+      "Context of testing",
+      "Test approach"
+    ],
+    "answer": "Test approach",
+    "explanation": "Information about test levels, coverage expectations, and exit criteria belongs to the test approach section.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A19"
+  },
+  {
+    "q": "A team uses planning poker for test estimation and allows the rule 'accept the number with the most votes' when variation is small and consensus is not reached in time. After a final round, most estimates are 13 but some are still 8. What is the best next step?",
+    "options": [
+      "Have the product owner impose a final estimate",
+      "Accept 13 as the estimate because it has the most votes",
+      "Treat the estimate as consensus and stop",
+      "Remove the feature from the release"
+    ],
+    "answer": "Accept 13 as the estimate because it has the most votes",
+    "explanation": "Given the team's agreed rule and the small remaining variation, choosing the most-voted estimate is the appropriate next step.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A20"
+  },
+  {
+    "q": "Which statement about the test pyramid is true?",
+    "options": [
+      "It recommends far more tests at lower test levels.",
+      "It suggests each low-level test should cover a large amount of functionality.",
+      "It mainly describes how test types are distributed across the SDLC.",
+      "It has no impact on automated test design."
+    ],
+    "answer": "It recommends far more tests at lower test levels.",
+    "explanation": "The test pyramid emphasizes many lower-level automated tests and fewer higher-level tests.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A21"
+  },
+  {
+    "q": "During risk analysis, the team rates the impact of a possible discount-calculation problem as very high. What can be concluded about the likelihood?",
+    "options": [
+      "It must also be very high.",
+      "It must be very low.",
+      "Nothing can be concluded; impact and likelihood are independent.",
+      "Likelihood no longer matters when impact is very high."
+    ],
+    "answer": "Nothing can be concluded; impact and likelihood are independent.",
+    "explanation": "Impact and likelihood are separate factors. A high impact alone says nothing about how likely the risk is to occur.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A22"
+  },
+  {
+    "q": "Which pair below represents project risks rather than product risks?",
+    "options": [
+      "Management moves experienced testers away, and stakeholders have inaccurate expectations",
+      "Security noncompliance and accessibility problems for disabled users",
+      "Slow response times and stakeholder expectation problems",
+      "Security noncompliance and slow response times"
+    ],
+    "answer": "Management moves experienced testers away, and stakeholders have inaccurate expectations",
+    "explanation": "Project risks affect planning, staffing, and project execution. Product risks affect the quality characteristics or behavior of the delivered system.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A23"
+  },
+  {
+    "q": "Which example shows product risk analysis influencing the thoroughness or scope of testing?",
+    "options": [
+      "The test manager reports risk status daily so stakeholders can decide on release timing.",
+      "A database technology choice is changed because open-source support was identified as risky.",
+      "The team calculates total residual risk numerically before testing starts.",
+      "High performance risk leads the team to perform detailed performance testing early in the SDLC."
+    ],
+    "answer": "High performance risk leads the team to perform detailed performance testing early in the SDLC.",
+    "explanation": "Risk analysis should shape how much and what kind of testing is performed. High identified risk justifies deeper and earlier testing in that area.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A24"
+  },
+  {
+    "q": "Which two metrics are commonly used to report on the quality level of the test object?",
+    "options": [
+      "Number of defects found during system testing, and defect density",
+      "Average design effort per designed test case, and number of executed procedures",
+      "Number of executed procedures, and average defect repair time",
+      "Average design effort per designed test case, and average defect repair time"
+    ],
+    "answer": "Number of defects found during system testing, and defect density",
+    "explanation": "Defect counts and defect density are product-quality metrics. Effort per test case and repair time are process-oriented metrics instead.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A25"
+  },
+  {
+    "q": "Which item in a test progress report is usually least useful to business representatives?",
+    "options": [
+      "Current impediments to testing",
+      "Branch coverage achieved",
+      "Overall test progress",
+      "Newly identified risks in the test cycle"
+    ],
+    "answer": "Branch coverage achieved",
+    "explanation": "Branch coverage is a technical metric typically more relevant to developers or technical test specialists than to business stakeholders.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A26"
+  },
+  {
+    "q": "Which example best illustrates why testing is necessary?",
+    "options": [
+      "Dynamic testing is useful because it finds failures users could never trigger",
+      "Static analysis proves output-free code is safe for release",
+      "Testing is unnecessary when developers already reviewed the design",
+      "Reviews of requirements can prevent rework in downstream design and code"
+    ],
+    "answer": "Reviews of requirements can prevent rework in downstream design and code",
+    "explanation": "Early reviews improve requirement quality and reduce costly rework in later work products derived from those requirements.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 1"
+  },
+  {
+    "q": "Which statement about quality assurance and quality control is correct?",
+    "options": [
+      "Quality assurance is performed as part of testing",
+      "Testing is performed as part of quality control",
+      "Testing is another term for quality control",
+      "Testing is performed as part of quality assurance"
+    ],
+    "answer": "Testing is performed as part of quality control",
+    "explanation": "Quality control focuses on identifying product defects, and testing is one of its major activities. Quality assurance is more preventive and process-oriented.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 2"
+  },
+  {
+    "q": "How can a tester address the principle that exhaustive testing is impossible?",
+    "options": [
+      "Attempt to cover every possible specified output",
+      "List all possible inputs and stop after documenting them",
+      "Rely only on early static testing activities",
+      "Use techniques such as equivalence partitioning and boundary value analysis to select a finite subset"
+    ],
+    "answer": "Use techniques such as equivalence partitioning and boundary value analysis to select a finite subset",
+    "explanation": "These techniques provide a systematic way to choose a manageable subset of tests instead of trying to test everything.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 3"
+  },
+  {
+    "q": "Which test activity works directly with test data requirements, test conditions, test environment requirements, and test cases?",
+    "options": [
+      "Test design",
+      "Test execution",
+      "Test analysis",
+      "Test monitoring"
+    ],
+    "answer": "Test design",
+    "explanation": "Test design uses test conditions to derive test cases and related testware such as test data needs and environment requirements.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 4"
+  },
+  {
+    "q": "Which factor is most likely to affect how testing is performed for a given test object?",
+    "options": [
+      "The average experience level of the marketing department",
+      "How aware users are that a new system is being developed",
+      "The years of experience of the test team members",
+      "The end user's organizational chart"
+    ],
+    "answer": "The years of experience of the test team members",
+    "explanation": "Tester experience affects the skills, tools, and defect patterns the team can effectively apply during testing.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 5"
+  },
+  {
+    "q": "Which is a correct example of the value of traceability?",
+    "options": [
+      "Linking mitigated risks to passed tests alone is enough to calculate residual risk",
+      "Linking user requirements to test results helps measure progress against business goals",
+      "Linking failed tests to testers reveals tester skill level",
+      "Linking identified risks to test conditions determines whether the risks are worth testing"
+    ],
+    "answer": "Linking user requirements to test results helps measure progress against business goals",
+    "explanation": "This traceability shows which business-relevant requirements have been tested and what their current result status is.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 6"
+  },
+  {
+    "q": "Which scenario best shows a tester applying a generic testing skill?",
+    "options": [
+      "Sharing a gaming hobby with a developer",
+      "Using prior pilot experience to better understand helicopter-system acceptance criteria",
+      "Using programming experience to speak with business analysts",
+      "Carefully and methodically preparing for testing to avoid mistakes"
+    ],
+    "answer": "Carefully and methodically preparing for testing to avoid mistakes",
+    "explanation": "Being methodical and detail-oriented is a generic testing skill. Domain-specific experience like aviation knowledge is helpful, but not generic.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 7"
+  },
+  {
+    "q": "What is a real advantage of the whole-team approach?",
+    "options": [
+      "Every team member can instantly perform every role",
+      "A single team is always enough for the entire project",
+      "All team members participate in every technical and business decision",
+      "The team can use its combined skill set more effectively"
+    ],
+    "answer": "The team can use its combined skill set more effectively",
+    "explanation": "The whole-team approach leverages complementary skills across the team rather than assuming every person can do every job equally well.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 8"
+  },
+  {
+    "q": "Which statement about software development lifecycles is correct?",
+    "options": [
+      "In agile, automated system tests remove the need for regression testing",
+      "In sequential models, dynamic testing is usually concentrated later in the lifecycle",
+      "In iterative models, component testing is typically manual only",
+      "In incremental models, static testing happens in early increments and dynamic testing only in later ones"
+    ],
+    "answer": "In sequential models, dynamic testing is usually concentrated later in the lifecycle",
+    "explanation": "Sequential lifecycles typically postpone dynamic testing until later phases, after substantial implementation work exists.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 9"
+  },
+  {
+    "q": "Which testing practice is good across all software development lifecycles?",
+    "options": [
+      "Review work products only in the next development phase",
+      "Review work products as soon as drafts are available",
+      "Wait until test analysis begins before reviewing work products",
+      "Review work products only after publication"
+    ],
+    "answer": "Review work products as soon as drafts are available",
+    "explanation": "Early review supports shift-left testing and helps catch defects before more work is built on flawed artifacts.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 10"
+  },
+  {
+    "q": "Which is an example of a test-first development approach?",
+    "options": [
+      "Test-Driven Development",
+      "Coverage-Driven Development",
+      "Quality-Driven Development",
+      "Feature-Driven Development"
+    ],
+    "answer": "Test-Driven Development",
+    "explanation": "TDD is the classic example of creating tests before implementing the production code they drive.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 11"
+  },
+  {
+    "q": "Which statement about DevOps is correct?",
+    "options": [
+      "Continuous integration works best if developers submit code before component testing is complete",
+      "Frequent releases depend on extensive automated regression testing to control regression risk",
+      "DevOps shifts most testing effort to operations after release",
+      "DevOps requires eliminating all manual testing"
+    ],
+    "answer": "Frequent releases depend on extensive automated regression testing to control regression risk",
+    "explanation": "DevOps benefits from automation and fast feedback, and frequent change increases the need for strong automated regression protection.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 12"
+  },
+  {
+    "q": "Which activity is most likely part of system testing?",
+    "options": [
+      "Security testing of a credit system by an independent test team",
+      "Testing an interface with an external banking system",
+      "Beta testing by the development team",
+      "Testing interactions between a UI and its database"
+    ],
+    "answer": "Security testing of a credit system by an independent test team",
+    "explanation": "System testing covers the behavior and quality characteristics of the whole system, including non-functional areas such as security.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 13"
+  },
+  {
+    "q": "Which statement correctly distinguishes regression testing from confirmation testing?",
+    "options": [
+      "Regression testing checks unchanged areas for side effects, while confirmation testing checks the changed code or fix",
+      "Regression testing is about the operational environment, while confirmation testing is about the test object",
+      "Regression tests decrease over time, while confirmation tests increase",
+      "Regression testing is created after a fix, while confirmation testing is run after enhancements"
+    ],
+    "answer": "Regression testing checks unchanged areas for side effects, while confirmation testing checks the changed code or fix",
+    "explanation": "Confirmation testing verifies a specific fix works, while regression testing looks for unintended consequences elsewhere.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 14"
+  },
+  {
+    "q": "Which defect can static testing find but dynamic testing cannot directly reveal?",
+    "options": [
+      "A usability problem in the interface",
+      "Code that no possible execution path can reach",
+      "Poor response time under expected user load",
+      "A required feature missing from the implementation"
+    ],
+    "answer": "Code that no possible execution path can reach",
+    "explanation": "Unreachable code can be detected by review or static analysis, but dynamic testing can only execute reachable paths.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 15"
+  },
+  {
+    "q": "What is a benefit of early and frequent stakeholder feedback?",
+    "options": [
+      "It identifies which developers are less productive",
+      "It tells project managers how to rank stakeholders",
+      "It helps communicate potential quality issues early",
+      "It helps end users accept delivery delays"
+    ],
+    "answer": "It helps communicate potential quality issues early",
+    "explanation": "Frequent stakeholder feedback exposes concerns and quality issues sooner, while there is still time to respond effectively.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 16"
+  },
+  {
+    "q": "Which mapping of review tasks to review activities is correct?",
+    "options": [
+      "Select quality characteristics and exit criteria during review initiation; identify anomalies during communication and analysis",
+      "Give everyone access to the work product during planning; discuss anomalies during individual review",
+      "Identify anomalies during review initiation; give access during individual review",
+      "Select quality characteristics and exit criteria during planning; give access during review initiation; identify anomalies during individual review; discuss anomalies during communication and analysis"
+    ],
+    "answer": "Select quality characteristics and exit criteria during planning; give access during review initiation; identify anomalies during individual review; discuss anomalies during communication and analysis",
+    "explanation": "That sequence matches the standard review flow: plan the review, initiate it, inspect individually, then discuss and analyze findings.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 17"
+  },
+  {
+    "q": "Which role-to-responsibility mapping in reviews is correct?",
+    "options": [
+      "Scribe runs the meeting, review leader records findings, facilitator allocates staff, manager moderates",
+      "Scribe allocates resources, review leader records findings, facilitator leads the schedule, manager keeps minutes",
+      "Scribe records review information, review leader takes overall responsibility, facilitator ensures an effective and safe meeting, manager decides what is reviewed and allocates resources",
+      "Scribe takes overall responsibility, review leader decides scope, facilitator records findings, manager chairs the meeting"
+    ],
+    "answer": "Scribe records review information, review leader takes overall responsibility, facilitator ensures an effective and safe meeting, manager decides what is reviewed and allocates resources",
+    "explanation": "Those responsibilities align with the standard review roles defined by ISTQB.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 18"
+  },
+  {
+    "q": "Which statement best captures the difference between decision table testing and branch testing?",
+    "options": [
+      "Decision table tests come from source-code decisions, while branch tests come from control flow",
+      "Decision table tests come from business-rule specifications, while branch tests depend on internal structure and can only be designed after design or code exists",
+      "Decision table testing is structural, while branch testing is specification-based",
+      "Both are black-box techniques but branch testing is executed later"
+    ],
+    "answer": "Decision table tests come from business-rule specifications, while branch tests depend on internal structure and can only be designed after design or code exists",
+    "explanation": "Decision table testing is black-box and specification-based. Branch testing is white-box and depends on internal control flow.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 19"
+  },
+  {
+    "q": "A loyalty wash program gives no discount on most visits, 10 percent on every tenth visit, and a total of 50 percent on every twentieth visit. Which set of visit counts gives full valid equivalence-partition coverage?",
+    "options": [
+      "19, 20, 30",
+      "11, 12, 20",
+      "1, 10, 50",
+      "29, 30, 31"
+    ],
+    "answer": "19, 20, 30",
+    "explanation": "Those three values cover the no-discount, tenth-wash discount, and twentieth-wash discount partitions.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 20"
+  },
+  {
+    "q": "Which is a typical objective of dynamic testing?",
+    "options": [
+      "Validating that documented requirements are met",
+      "Causing failures and identifying defects",
+      "Initiating errors and finding root causes",
+      "Verifying the test object meets user expectations"
+    ],
+    "answer": "Causing failures and identifying defects",
+    "explanation": "A core objective of dynamic testing is to execute the software to reveal failures and thereby identify defects.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 1"
+  },
+  {
+    "q": "Which statement best distinguishes testing from debugging?",
+    "options": [
+      "Testing causes failures while debugging fixes failures",
+      "Testing is negative while debugging is positive",
+      "Testing determines that defects exist while debugging removes defects",
+      "Testing finds defect causes while debugging fixes those causes"
+    ],
+    "answer": "Testing determines that defects exist while debugging removes defects",
+    "explanation": "Testing reveals defects directly or indirectly. Debugging is a separate activity focused on locating and fixing the defects.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 2"
+  },
+  {
+    "q": "Which action best addresses the absence-of-defects fallacy?",
+    "options": [
+      "Explaining that testing cannot prove zero defects",
+      "Supporting end users in acceptance testing",
+      "Ensuring no implementation defects remain",
+      "Refreshing tests that no longer find failures"
+    ],
+    "answer": "Supporting end users in acceptance testing",
+    "explanation": "The absence-of-defects fallacy warns that a defect-free implementation may still fail to satisfy user needs, so validation with users matters.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 3"
+  },
+  {
+    "q": "Which mapping of testware to test activities is correct?",
+    "options": [
+      "Coverage items -> test design, change requests -> test completion, test execution schedule -> test implementation, prioritized test conditions -> test analysis",
+      "Coverage items -> test design, change requests -> test completion, test execution schedule -> test analysis, prioritized test conditions -> test implementation",
+      "Coverage items -> test completion, change requests -> test implementation, test execution schedule -> test analysis, prioritized test conditions -> test design",
+      "Coverage items -> test completion, change requests -> test implementation, test execution schedule -> test design, prioritized test conditions -> test analysis"
+    ],
+    "answer": "Coverage items -> test design, change requests -> test completion, test execution schedule -> test implementation, prioritized test conditions -> test analysis",
+    "explanation": "Coverage items arise in design, change requests can come from completion, execution schedules are implementation work products, and prioritized test conditions come from analysis.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 5"
+  },
+  {
+    "q": "Which statement about testing roles is most likely correct in Agile development?",
+    "options": [
+      "Testing is mainly the responsibility of one person outside the team",
+      "Testing role mainly handles monitoring and control while management handles planning and completion",
+      "Cross-team test management can be handled by a test manager outside the team while some management tasks stay within the team",
+      "Test management mainly does analysis and design while testers mainly do implementation and execution"
+    ],
+    "answer": "Cross-team test management can be handled by a test manager outside the team while some management tasks stay within the team",
+    "explanation": "Agile teams often handle some test management themselves, while broader coordination across multiple teams may still sit with an external test manager.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 6"
+  },
+  {
+    "q": "Which is an advantage of the whole-team approach?",
+    "options": [
+      "Teams with no testers",
+      "Improved team dynamics",
+      "More specialist team members",
+      "Larger team sizes"
+    ],
+    "answer": "Improved team dynamics",
+    "explanation": "The whole-team approach promotes better collaboration, communication, and synergy across the team.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 7"
+  },
+  {
+    "q": "Which statement about independence of testing is correct?",
+    "options": [
+      "Independent testers can find different defects than developers, but independence can create an adversarial relationship",
+      "Developers find only a few defects in their own code and testers would find the same few because of shared background",
+      "Independent testing requires testers from outside the organization",
+      "Testers inside the team are more likely than outsiders to be blamed for release delays"
+    ],
+    "answer": "Independent testers can find different defects than developers, but independence can create an adversarial relationship",
+    "explanation": "Different perspectives increase defect discovery diversity, but organizational distance can also reduce collaboration.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 8"
+  },
+  {
+    "q": "Which testing practice applies well across software development lifecycles?",
+    "options": [
+      "For each test level there is a corresponding development level",
+      "For each test objective there is a matching development objective",
+      "For every test activity there is a corresponding user activity",
+      "For every development activity there is a corresponding test activity"
+    ],
+    "answer": "For every development activity there is a corresponding test activity",
+    "explanation": "Testing should be aligned with development work throughout the lifecycle, not deferred as a separate late-stage concern.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 9"
+  },
+  {
+    "q": "Which is an example of a test-first development approach?",
+    "options": [
+      "Component test-driven development",
+      "Integration test-driven development",
+      "System test-driven development",
+      "Acceptance test-driven development"
+    ],
+    "answer": "Acceptance test-driven development",
+    "explanation": "ATDD is a recognized test-first approach in which acceptance tests are defined before the software is implemented.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 10"
+  },
+  {
+    "q": "Which description best captures shift-left testing?",
+    "options": [
+      "Automating only the left side of the test process when developers agree",
+      "Moving test activities earlier in the SDLC when cost-effective to reduce later defects and quality cost",
+      "Using spare tester time to automate only low-level regression tests",
+      "Training testers early so more testing can be automated later"
+    ],
+    "answer": "Moving test activities earlier in the SDLC when cost-effective to reduce later defects and quality cost",
+    "explanation": "Shift-left is about earlier testing and feedback, not merely about automation.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 11"
+  },
+  {
+    "q": "Which outcome is least likely to result from a retrospective?",
+    "options": [
+      "Future test object quality improves through process improvements",
+      "Test environment setup becomes more efficient through automation",
+      "End users improve their understanding of development and test processes",
+      "Automated test scripts are improved through developer feedback"
+    ],
+    "answer": "End users improve their understanding of development and test processes",
+    "explanation": "Retrospectives are internal team improvement activities; improving end-user understanding is not a typical primary result.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 12"
+  },
+  {
+    "q": "If testing is focused on validation and is not performed by testers, which test level is most likely involved?",
+    "options": [
+      "Component testing",
+      "Component integration testing",
+      "System integration testing",
+      "Acceptance testing"
+    ],
+    "answer": "Acceptance testing",
+    "explanation": "Acceptance testing commonly focuses on validation and is often performed by business representatives or end users rather than the test team.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 13"
+  },
+  {
+    "q": "A navigation system was fixed after it suggested routes that violate traffic laws. What testing sequence best fits the next step?",
+    "options": [
+      "Only confirmation testing",
+      "Confirmation testing followed by regression testing",
+      "Only regression testing",
+      "Regression testing followed by confirmation testing"
+    ],
+    "answer": "Confirmation testing followed by regression testing",
+    "explanation": "First verify the fix works, then check whether the change caused unintended side effects elsewhere.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 14"
+  },
+  {
+    "q": "Which set of example defects is best suited for detection by static testing rather than dynamic testing?",
+    "options": [
+      "Slow response time and excessive memory use",
+      "Unreachable code path and excessive memory use",
+      "Conflicting design specification sections, slow response time, and an unused variable",
+      "Conflicting design specification sections, unreachable code path, and an unused variable"
+    ],
+    "answer": "Conflicting design specification sections, unreachable code path, and an unused variable",
+    "explanation": "Static testing can reveal inconsistencies in documents and code issues like unreachable paths or unused variables without execution.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 15"
+  },
+  {
+    "q": "Which is a benefit of early and frequent stakeholder feedback?",
+    "options": [
+      "Requirement changes are understood and implemented earlier",
+      "It ensures business stakeholders understand user requirements",
+      "It lets product owners change requirements as often as they want",
+      "It tells end users before release which requirements will not be implemented"
+    ],
+    "answer": "Requirement changes are understood and implemented earlier",
+    "explanation": "Frequent feedback helps teams understand change sooner and respond while adaptation is still cheaper and easier.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 16"
+  },
+  {
+    "q": "Which is a typical test objective?",
+    "options": [
+      "Finding and fixing defects in the test object",
+      "Maintaining effective communications with developers",
+      "Validating that legal requirements have been met",
+      "Building confidence in the quality of the test object"
+    ],
+    "answer": "Building confidence in the quality of the test object",
+    "explanation": "Testing can increase stakeholder confidence by providing evidence about quality. Fixing defects is not itself a testing activity.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 1"
+  },
+  {
+    "q": "A programmer works under severe time pressure and omits suitable exception handling, leading to occasional incorrect bonus calculations. According to ISTQB terminology, what is the time pressure here?",
+    "options": [
+      "A defect",
+      "A failure",
+      "A root cause",
+      "An error in the design"
+    ],
+    "answer": "A root cause",
+    "explanation": "The human mistake creates the defect, and the severe time pressure is the underlying condition that caused that mistake.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 2"
+  },
+  {
+    "q": "Testers reuse the same test conditions but vary the resulting test cases each time they execute them. Which testing principle does this address?",
+    "options": [
+      "Tests wear out",
+      "Absence-of-defects fallacy",
+      "Early testing saves time and money",
+      "Defects cluster together"
+    ],
+    "answer": "Tests wear out",
+    "explanation": "Refreshing tests reduces the risk that repeatedly running identical tests on unchanged software will stop finding new defects.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 3"
+  },
+  {
+    "q": "Which mapping between test tasks and test activities is correct?",
+    "options": [
+      "Derive test cases -> test design, identify reusable testware -> test analysis, organize test cases into procedures -> test completion, evaluate the test basis -> test implementation",
+      "Derive test cases -> test design, identify reusable testware -> test completion, organize test cases into procedures -> test implementation, evaluate the test basis -> test analysis",
+      "Derive test cases -> test implementation, identify reusable testware -> test analysis, organize test cases into procedures -> test design, evaluate the test basis -> test completion",
+      "Derive test cases -> test implementation, identify reusable testware -> test completion, organize test cases into procedures -> test analysis, evaluate the test basis -> test design"
+    ],
+    "answer": "Derive test cases -> test design, identify reusable testware -> test completion, organize test cases into procedures -> test implementation, evaluate the test basis -> test analysis",
+    "explanation": "Test analysis evaluates the basis and identifies test conditions, test design derives cases, implementation organizes them into procedures, and completion identifies reusable testware.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 4"
+  },
+  {
+    "q": "Which outputs are most directly produced during test implementation?",
+    "options": [
+      "Test data and documented test procedures",
+      "Test environment requirements and test cases",
+      "Test completion report, test data, and test cases",
+      "Test completion report, test environment requirements, and test procedures"
+    ],
+    "answer": "Test data and documented test procedures",
+    "explanation": "Test implementation creates executable or runnable testware such as test data, test procedures, test scripts, and execution schedules.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 5"
+  },
+  {
+    "q": "Which task is most likely performed by someone in a test management role?",
+    "options": [
+      "Evaluate the test basis and the test object",
+      "Define test environment requirements",
+      "Assess testability of the test object",
+      "Create the test completion report"
+    ],
+    "answer": "Create the test completion report",
+    "explanation": "Test management is closely associated with planning, monitoring and control, and completion activities such as producing the completion report.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 6"
+  },
+  {
+    "q": "Which is an advantage of the whole-team approach?",
+    "options": [
+      "Improved communication between team members",
+      "Decreased individual accountability for quality",
+      "Faster deployment of deliverables to end users",
+      "Reduced collaboration with external business users"
+    ],
+    "answer": "Improved communication between team members",
+    "explanation": "The whole-team approach emphasizes collaboration and communication to improve product quality.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 7"
+  },
+  {
+    "q": "Which pair is most likely to be a benefit of independent testing?",
+    "options": [
+      "Testers working in a different location and developers feeling less accountable for quality",
+      "Testers challenging programmers' assumptions and bringing different biases than developers",
+      "A confrontational tester-developer dynamic and testers working remotely",
+      "Testers challenging assumptions, plus a confrontational relationship with developers"
+    ],
+    "answer": "Testers challenging programmers' assumptions and bringing different biases than developers",
+    "explanation": "Independence helps because different perspectives reveal different defects and challenge assumptions. Isolation and confrontation are drawbacks, not benefits.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 8"
+  },
+  {
+    "q": "Which good testing practice applies across software development lifecycles?",
+    "options": [
+      "Each test level has specific and distinct test objectives",
+      "Test implementation and execution should start during the corresponding development phase",
+      "Testers should start detailed test design as soon as any draft is available",
+      "Every dynamic testing activity has a corresponding static testing activity"
+    ],
+    "answer": "Each test level has specific and distinct test objectives",
+    "explanation": "Different test levels exist for different objectives and test objects. The other choices overgeneralize timing or symmetry rules.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 9"
+  },
+  {
+    "q": "Which is an example of a test-first approach to development?",
+    "options": [
+      "Behavior-Driven Development",
+      "Test Level Driven Development",
+      "Function-Driven Development",
+      "Performance-Driven Development"
+    ],
+    "answer": "Behavior-Driven Development",
+    "explanation": "BDD is a recognized test-first approach in which examples and expected behaviors are defined before implementation.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 10"
+  },
+  {
+    "q": "Which is most likely to be a challenge when implementing DevOps?",
+    "options": [
+      "Making sure non-functional quality characteristics are not overlooked",
+      "Managing continuously changing test environments",
+      "The need for more manual testers with suitable experience",
+      "Setting up test automation as part of the delivery pipeline"
+    ],
+    "answer": "Setting up test automation as part of the delivery pipeline",
+    "explanation": "DevOps relies heavily on CI/CD and automation, so establishing and maintaining the delivery pipeline and its test automation is a real implementation challenge.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 11"
+  },
+  {
+    "q": "Which statement best describes retrospectives?",
+    "options": [
+      "They identify team members who did not fully contribute to quality",
+      "They help the team identify successful activities to retain and problems to improve",
+      "They are mainly a blameless space to complain about management and customers",
+      "They are where the next iteration's plan and technical decisions are finalized"
+    ],
+    "answer": "They help the team identify successful activities to retain and problems to improve",
+    "explanation": "Retrospectives focus on learning from the completed iteration and improving future work, not blame or forward planning detail.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 12"
+  },
+  {
+    "q": "Which test is most likely part of functional testing?",
+    "options": [
+      "Checking that a sort function orders values in ascending order",
+      "Checking that the sort function completes within one second",
+      "Checking how easily the sort function can be changed from ascending to descending",
+      "Checking that the sort function still works after moving from 32-bit to 64-bit architecture"
+    ],
+    "answer": "Checking that a sort function orders values in ascending order",
+    "explanation": "That test checks functional correctness. The other options target performance, maintainability, or portability.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 13"
+  },
+  {
+    "q": "Which is most likely to trigger maintenance testing of a currency exchange system?",
+    "options": [
+      "Testers want to check whether the system is hard to change",
+      "A faulty refund option is removed because it sometimes repays the wrong amount",
+      "The agile team starts implementing a new loyalty feature",
+      "Operators enable both English and local-language transactions through configuration"
+    ],
+    "answer": "A faulty refund option is removed because it sometimes repays the wrong amount",
+    "explanation": "A fix to an existing operational system is a classic trigger for maintenance testing.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 14"
+  },
+  {
+    "q": "Which work product cannot be examined effectively by static testing?",
+    "options": [
+      "A contract",
+      "A test plan",
+      "Encrypted code",
+      "A test charter"
+    ],
+    "answer": "Encrypted code",
+    "explanation": "Static testing requires a work product that humans or tools can meaningfully inspect. Properly encrypted code is not practically reviewable in that form.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 15"
+  },
+  {
+    "q": "Which statement about the value of static testing is correct?",
+    "options": [
+      "The defect types found by static testing are completely different from those found by dynamic testing",
+      "Dynamic testing can detect all defect types static testing can detect, plus additional ones",
+      "Dynamic testing can identify some defects that static testing can find, but not all of them",
+      "Static testing can identify everything dynamic testing can find, plus extra defect types"
+    ],
+    "answer": "Dynamic testing can identify some defects that static testing can find, but not all of them",
+    "explanation": "Some defects are visible to both approaches, but static testing can reveal certain issues that execution-based testing cannot, such as some non-executable artifact defects or unreachable code.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 16"
+  },
+  {
+    "q": "What is the correct sequence of generic review-process activities?",
+    "options": [
+      "Planning -> Individual review -> Review initiation -> Fixing and reporting -> Communication and analysis",
+      "Planning -> Review initiation -> Individual review -> Communication and analysis -> Fixing and reporting",
+      "Review initiation -> Planning -> Communication and analysis -> Individual review -> Fixing and reporting",
+      "Review initiation -> Planning -> Individual review -> Fixing and reporting -> Communication and analysis"
+    ],
+    "answer": "Planning -> Review initiation -> Individual review -> Communication and analysis -> Fixing and reporting",
+    "explanation": "The review process begins with planning, then initiation and distribution of materials, then individual review, group analysis, and finally fixing/reporting.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 17"
+  },
+  {
+    "q": "Which review participant is responsible for ensuring meetings run effectively and that everyone can speak freely?",
+    "options": [
+      "Manager",
+      "Moderator",
+      "Chairperson",
+      "Review leader"
+    ],
+    "answer": "Moderator",
+    "explanation": "The moderator or facilitator manages the meeting process, time, and discussion climate so participants can contribute safely and effectively.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 18"
+  },
+  {
+    "q": "A requirements document describes a precise business rule such as 'discount applies only when spend exceeds $100.' Which type of test technique is most suitable for designing tests from that document?",
+    "options": [
+      "White-box test techniques",
+      "Black-box test techniques",
+      "Experience-based test techniques as the primary choice",
+      "Risk-based test techniques"
+    ],
+    "answer": "Black-box test techniques",
+    "explanation": "A precise business rule in a requirements document is a strong basis for black-box techniques such as boundary value analysis or decision table testing.",
+    "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 19"
+  }
+]

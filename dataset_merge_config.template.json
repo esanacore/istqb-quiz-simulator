@@ -1,0 +1,15 @@
+{
+  "output_dir": "merge_output",
+  "sources": [
+    {
+      "name": "authoritative_source",
+      "path": "data/source_a.json",
+      "authority": "authoritative"
+    },
+    {
+      "name": "supplementary_source",
+      "path": "data/source_b.json",
+      "authority": "supplementary"
+    }
+  ]
+}

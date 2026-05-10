@@ -10,6 +10,7 @@ from pathlib import Path
 
 import exam_models
 import exam_storage
+import merge_scaffold
 
 TEST_DATA_DIR = Path(__file__).with_name(".testdata")
 
@@ -189,6 +190,124 @@ class ExamSessionTests(unittest.TestCase):
         self.assertIn("Source: Sample 1", result.report)
         self.assertEqual(1, self.session.current_q)
         self.assertEqual(["B", "A"], self.session.user_answers)
+
+
+class MergeScaffoldTests(unittest.TestCase):
+    """Tests for merge scaffold normalization and conflict-resolution behavior."""
+
+    def setUp(self):
+        TEST_DATA_DIR.mkdir(exist_ok=True)
+
+    def tearDown(self):
+        if TEST_DATA_DIR.exists():
+            for path in TEST_DATA_DIR.iterdir():
+                if path.is_file():
+                    path.unlink()
+
+    def write_json(self, name, payload):
+        """Write a JSON fixture file into the workspace-local test directory."""
+        path = TEST_DATA_DIR / name
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        return path
+
+    def test_load_merge_config_rejects_missing_sources(self):
+        config_path = self.write_json("merge_config.json", {"output_dir": "merge_output"})
+
+        with self.assertRaises(ValueError):
+            merge_scaffold.load_merge_config(config_path)
+
+    def test_dedupe_key_normalizes_whitespace_and_case(self):
+        record = merge_scaffold.MergeRecord(
+            record_id="1",
+            content="  This Is A Question  ",
+            source_name="source_a",
+            source_record_id="1",
+            authority="supplementary",
+            payload={},
+        )
+
+        self.assertEqual("this is a question", merge_scaffold.dedupe_key(record))
+
+    def test_choose_preferred_record_uses_authority_rank(self):
+        existing = merge_scaffold.MergeRecord(
+            record_id="1",
+            content="question",
+            source_name="legacy_source",
+            source_record_id="L1",
+            authority="legacy",
+            payload={},
+        )
+        candidate = merge_scaffold.MergeRecord(
+            record_id="2",
+            content="question",
+            source_name="authoritative_source",
+            source_record_id="A1",
+            authority="authoritative",
+            payload={},
+        )
+
+        chosen, rejected, note = merge_scaffold.choose_preferred_record(existing, candidate)
+
+        self.assertIs(candidate, chosen)
+        self.assertIs(existing, rejected)
+        self.assertIn("higher-authority source", note)
+        self.assertIn(note, candidate.transformation_notes)
+
+    def test_merge_records_quarantines_empty_dedupe_key(self):
+        empty_record = merge_scaffold.MergeRecord(
+            record_id="1",
+            content="   ",
+            source_name="source_a",
+            source_record_id="1",
+            authority="supplementary",
+            payload={},
+        )
+        valid_record = merge_scaffold.MergeRecord(
+            record_id="2",
+            content="Valid content",
+            source_name="source_b",
+            source_record_id="2",
+            authority="supplementary",
+            payload={},
+        )
+
+        merged, quarantined, audit_log = merge_scaffold.merge_records([empty_record, valid_record])
+
+        self.assertEqual(1, len(merged))
+        self.assertEqual(1, len(quarantined))
+        self.assertIs(empty_record, quarantined[0])
+        self.assertIn("Quarantined because dedupe key was empty.", empty_record.transformation_notes)
+        self.assertEqual(["Inserted source_b:2"], audit_log)
+
+    def test_run_merge_and_export_helpers(self):
+        source_path = self.write_json(
+            "source_records.json",
+            [{"id": "1", "content": "Question A"}, {"id": "2", "content": "Question A"}],
+        )
+        config = {
+            "sources": [
+                {
+                    "path": str(source_path),
+                    "name": "source_a",
+                    "authority": "supplementary",
+                }
+            ]
+        }
+        merged, quarantined, audit_log = merge_scaffold.run_merge(config)
+
+        merged_path = TEST_DATA_DIR / "merged_records.json"
+        audit_path = TEST_DATA_DIR / "merge_audit.log"
+        merge_scaffold.export_records(merged, merged_path)
+        merge_scaffold.export_audit_log(audit_log, audit_path)
+
+        exported = json.loads(merged_path.read_text(encoding="utf-8"))
+        audit_text = audit_path.read_text(encoding="utf-8")
+
+        self.assertEqual(1, len(merged))
+        self.assertEqual(0, len(quarantined))
+        self.assertEqual(1, len(exported))
+        self.assertIn("transformation_notes", exported[0])
+        self.assertIn("Inserted source_a:1", audit_text)
 
 
 if __name__ == "__main__":

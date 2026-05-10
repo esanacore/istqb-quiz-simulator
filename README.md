@@ -37,6 +37,7 @@ practiceISTQB/
 ├── ARCHITECTURE.md
 ├── TESTING.md
 ├── CONTRIBUTING.md
+├── RELEASE_NOTES_v0.1.0.md
 ├── PROJECT_EVOLUTION_FRAMEWORK.md
 ├── SESSION_CHECKLIST.md
 ├── AI_COLLABORATION_GUIDE.md
@@ -55,7 +56,9 @@ practiceISTQB/
 ├── test_istqb_quiz_app.py
 ├── istqb_ctfl_practice_exam_links.rtf
 └── .github/
-    └── copilot-instructions.md
+    ├── copilot-instructions.md
+    ├── ISSUE_TEMPLATE/
+    └── workflows/
 ```
 
 ### Core Modules
@@ -94,6 +97,8 @@ practiceISTQB/
   Config-driven merge scaffold for ingest, normalize, dedupe, and export workflows.
 - [dataset_merge_config.template.json](C:/Projects/practiceISTQB/dataset_merge_config.template.json:1)
   Example config for running the merge scaffold.
+- [RELEASE_NOTES_v0.1.0.md](C:/Projects/practiceISTQB/RELEASE_NOTES_v0.1.0.md:1)
+  Suggested notes for the initial tagged release.
 
 ## 🚀 Getting Started
 
@@ -144,6 +149,18 @@ This repository now includes a small **project-operations toolkit** that can be 
 - dataset merge schema/checklist/CLI scaffold
 
 That toolkit is intended to make the patterns used in this repo transferable to future software projects and data-integration efforts.
+
+## 🤖 GitHub Automation
+
+The repository includes a GitHub Actions workflow for:
+
+- Python compile checks
+- unit test execution on pushes and pull requests
+
+It also includes issue templates for:
+
+- bug reports
+- feature requests
 
 ## 📚 Question Sources
 

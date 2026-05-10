@@ -1,0 +1,29 @@
+name: Python Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Show Python version
+        run: python --version
+
+      - name: Run compile checks
+        run: python -m py_compile ISTQBQuizApp.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py
+
+      - name: Run unit tests
+        run: python -m unittest -v

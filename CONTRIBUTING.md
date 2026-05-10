@@ -55,7 +55,7 @@ Before considering work complete, run:
 
 ```powershell
 python -m unittest -v
-python -m py_compile ISTQBQuizApp.py exam_models.py exam_storage.py test_istqb_quiz_app.py
+python -m py_compile ISTQBQuizApp.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py
 ```
 
 ## Suggested Contribution Areas
@@ -63,6 +63,7 @@ python -m py_compile ISTQBQuizApp.py exam_models.py exam_storage.py test_istqb_q
 - expand question metadata with topic and learning objective fields
 - improve study analytics or weak-area review modes
 - add import tooling for source-backed question expansion
+- strengthen the reusable merge toolkit for future projects
 - further decompose the Tkinter UI into smaller view/controller units
 - improve history exploration and filtering
 

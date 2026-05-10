@@ -54,7 +54,7 @@ python -m unittest -v
 ## Compile / Syntax Verification
 
 ```powershell
-python -m py_compile ISTQBQuizApp.py exam_models.py exam_storage.py test_istqb_quiz_app.py
+python -m py_compile ISTQBQuizApp.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py
 ```
 
 ## Recommended Future Testing Improvements
@@ -75,6 +75,7 @@ Add tests for:
 - missing required question fields
 - wrong option counts
 - non-dictionary entries in source files
+- merge scaffold conflict and quarantine behavior
 
 ### 3. Add UI Smoke Coverage
 

@@ -230,7 +230,7 @@ class ISTQBQuizApp:
         )
         self.q_label.pack(fill="x", padx=24, pady=(0, 18))
 
-        self.var = tk.StringVar()
+        self.var = tk.StringVar(value="\x00")
         self.option_buttons = []
         self.options_frame = tk.Frame(self.question_card, bg=PANEL_COLOR)
         self.options_frame.pack(fill="both", expand=True, padx=18, pady=(0, 12))

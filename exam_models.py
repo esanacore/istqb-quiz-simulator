@@ -57,6 +57,19 @@ class ExamSession:
         self.time_left = self.duration_seconds
         self.submitted = False
 
+    def advance_time(self, elapsed_seconds):
+        """Decrease the remaining exam time by a whole-second amount.
+
+        Args:
+            elapsed_seconds: Number of elapsed seconds to subtract.
+        """
+        if self.submitted:
+            return self.time_left
+
+        elapsed_seconds = max(0, int(elapsed_seconds))
+        self.time_left = max(0, self.time_left - elapsed_seconds)
+        return self.time_left
+
     def save_answer(self, value):
         """Persist the current answer choice for the active question.
 

@@ -8,9 +8,11 @@ import json
 import unittest
 from pathlib import Path
 
+import cli_quiz
 import exam_models
 import exam_storage
 import merge_scaffold
+import ui_layout
 
 TEST_DATA_DIR = Path(__file__).with_name(".testdata")
 
@@ -172,6 +174,13 @@ class ExamSessionTests(unittest.TestCase):
         self.assertEqual(120, self.session.time_left)
         self.assertFalse(self.session.submitted)
 
+    def test_advance_time_stops_at_zero_and_ignores_negative_input(self):
+        self.session.advance_time(15)
+        self.session.advance_time(-20)
+        self.session.advance_time(500)
+
+        self.assertEqual(0, self.session.time_left)
+
     def test_submit_builds_result_and_locks_session(self):
         self.session.save_answer("B")
         self.session.next_q()
@@ -190,6 +199,69 @@ class ExamSessionTests(unittest.TestCase):
         self.assertIn("Source: Sample 1", result.report)
         self.assertEqual(1, self.session.current_q)
         self.assertEqual(["B", "A"], self.session.user_answers)
+
+
+class CliHelperTests(unittest.TestCase):
+    """Tests for the command-line helper functions."""
+
+    def test_parse_answer_token_supports_letters_and_numbers(self):
+        self.assertEqual(0, cli_quiz.parse_answer_token("A", 4))
+        self.assertEqual(2, cli_quiz.parse_answer_token("3", 4))
+        self.assertIsNone(cli_quiz.parse_answer_token("9", 4))
+        self.assertIsNone(cli_quiz.parse_answer_token("next", 4))
+
+    def test_format_duration_and_progress_bar(self):
+        self.assertEqual("02:05", cli_quiz.format_duration(125))
+        self.assertEqual("[#####-----]", cli_quiz.build_progress_bar(2, 4, width=10))
+
+    def test_build_question_map_marks_current_answered_and_marked(self):
+        session = exam_models.ExamSession(
+            [
+                {
+                    "q": "Question 1",
+                    "options": ["A", "B", "C", "D"],
+                    "answer": "A",
+                    "explanation": "Explanation 1",
+                },
+                {
+                    "q": "Question 2",
+                    "options": ["A", "B", "C", "D"],
+                    "answer": "B",
+                    "explanation": "Explanation 2",
+                },
+                {
+                    "q": "Question 3",
+                    "options": ["A", "B", "C", "D"],
+                    "answer": "C",
+                    "explanation": "Explanation 3",
+                },
+            ]
+        )
+        session.save_answer("A")
+        session.next_q()
+        session.toggle_mark()
+
+        question_map = cli_quiz.build_question_map(session, columns=3)
+
+        self.assertIn(" 01*", question_map)
+        self.assertIn("[02]", question_map)
+        self.assertIn(" 03.", question_map)
+
+
+class UiLayoutTests(unittest.TestCase):
+    """Tests for responsive layout calculations."""
+
+    def test_determine_layout_mode_switches_at_threshold(self):
+        self.assertEqual(ui_layout.COMPACT_LAYOUT, ui_layout.determine_layout_mode(900))
+        self.assertEqual(ui_layout.WIDE_LAYOUT, ui_layout.determine_layout_mode(1280))
+
+    def test_compute_wrap_lengths_expands_in_compact_mode(self):
+        compact = ui_layout.compute_wrap_lengths(900, ui_layout.COMPACT_LAYOUT)
+        wide = ui_layout.compute_wrap_lengths(1200, ui_layout.WIDE_LAYOUT)
+
+        self.assertGreater(compact["question"], wide["question"] - 100)
+        self.assertGreaterEqual(compact["sidebar"], 260)
+        self.assertGreater(wide["option"], 380)
 
 
 class MergeScaffoldTests(unittest.TestCase):

@@ -24,6 +24,7 @@ When making changes, prefer this order:
 
 - Use **Python** with clear, explicit logic.
 - Keep UI concerns in [ISTQBQuizApp.py](C:/Projects/practiceISTQB/ISTQBQuizApp.py:1).
+- Keep CLI presentation concerns in [cli_quiz.py](C:/Projects/practiceISTQB/cli_quiz.py:1).
 - Keep domain logic in [exam_models.py](C:/Projects/practiceISTQB/exam_models.py:1).
 - Keep persistence and exam assembly logic in [exam_storage.py](C:/Projects/practiceISTQB/exam_storage.py:1).
 - Use **Google-style docstrings** for modules, classes, and non-trivial functions.
@@ -55,7 +56,7 @@ Before considering work complete, run:
 
 ```powershell
 python -m unittest -v
-python -m py_compile ISTQBQuizApp.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py
+python -m py_compile ISTQBQuizApp.py cli_quiz.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py ui_layout.py
 ```
 
 ## Suggested Contribution Areas

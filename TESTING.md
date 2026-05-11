@@ -30,10 +30,20 @@ The suite currently verifies:
 - question navigation
 - answer persistence
 - mark-for-review behavior
+- timer countdown reduction
 - restart/reset behavior
 - submission and result generation
 - score calculation
 - session lock behavior after submission
+
+### CLI/Layout Helper Tests
+
+The suite also verifies:
+
+- CLI answer parsing
+- CLI progress and map rendering helpers
+- responsive layout mode selection
+- responsive wrap-length calculations
 
 ## Why UI Logic Is Not Heavily Unit Tested
 
@@ -54,7 +64,7 @@ python -m unittest -v
 ## Compile / Syntax Verification
 
 ```powershell
-python -m py_compile ISTQBQuizApp.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py
+python -m py_compile ISTQBQuizApp.py cli_quiz.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py ui_layout.py
 ```
 
 ## Recommended Future Testing Improvements

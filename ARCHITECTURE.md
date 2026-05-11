@@ -4,7 +4,7 @@
 
 The application is intentionally split into **three layers**:
 
-1. **UI / orchestration**
+1. **Presentation / orchestration**
 2. **Domain model**
 3. **Persistence / exam assembly**
 
@@ -12,19 +12,24 @@ This keeps Tkinter concerns separate from logic that should be easy to test and 
 
 ## Layers
 
-### 1. UI Layer
+### 1. Presentation Layer
 
-File: [ISTQBQuizApp.py](C:/Projects/practiceISTQB/ISTQBQuizApp.py:1)
+Files:
+
+- [ISTQBQuizApp.py](C:/Projects/practiceISTQB/ISTQBQuizApp.py:1)
+- [cli_quiz.py](C:/Projects/practiceISTQB/cli_quiz.py:1)
+- [ui_layout.py](C:/Projects/practiceISTQB/ui_layout.py:1)
 
 Responsibilities:
 
 - create and style Tkinter widgets
-- render current exam state
+- provide an interactive command-line exam flow
+- render current exam state in desktop and terminal surfaces
 - manage user actions such as navigation and submission
-- update visual state such as question highlighting and question map colors
-- show results and history windows
+- update visual state such as question highlighting, wrap behavior, and question map colors
+- show results and history views
 
-The UI should not own core scoring or navigation rules beyond delegating to the domain layer.
+The presentation layer should not own core scoring or navigation rules beyond delegating to the domain layer.
 
 ### 2. Domain Layer
 
@@ -106,7 +111,7 @@ Contains:
 
 ## Runtime Flow
 
-1. UI starts and loads question bank plus persisted history.
+1. Desktop UI or CLI starts and loads question bank plus persisted history.
 2. Storage layer builds a randomized `40`-question exam from the larger bank.
 3. Domain session is initialized with the selected exam questions.
 4. UI renders the active question and navigator state.
@@ -118,6 +123,7 @@ Contains:
 
 - The current architecture favors **clarity over abstraction depth**.
 - Tkinter remains in one main UI file to avoid over-fragmentation.
+- Shared exam behavior is intended to stay in `exam_models.py` so the GUI and CLI do not drift.
 - The domain model is the primary seam for future test growth.
 - If the UI grows significantly, the next split should be:
   - main window controller

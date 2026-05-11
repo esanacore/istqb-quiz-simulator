@@ -13,6 +13,7 @@ It is designed to feel closer to a real exam session than a simple flashcard app
 - **Mark for review**: visually flag questions and revisit them before submission.
 - **Persistent history**: store past attempts locally and remove individual history entries when needed.
 - **Results review**: see score, pass/fail status, explanations, and source metadata after each exam.
+- **Interactive CLI mode**: run a terminal-first exam flow with navigation commands, history access, and ANSI-styled output.
 - **Tkinter desktop UI**: lightweight, local, no web stack required.
 
 ## 🖼️ What The App Tries To Simulate
@@ -47,9 +48,11 @@ practiceISTQB/
 ├── DATASET_SCHEMA_TEMPLATE.md
 ├── MERGE_CLI_GUIDE.md
 ├── ISTQBQuizApp.py
+├── cli_quiz.py
 ├── exam_models.py
 ├── exam_storage.py
 ├── merge_scaffold.py
+├── ui_layout.py
 ├── dataset_merge_config.template.json
 ├── question_bank.json
 ├── exam_history.json        # created at runtime
@@ -65,12 +68,16 @@ practiceISTQB/
 
 - [ISTQBQuizApp.py](C:/Projects/practiceISTQB/ISTQBQuizApp.py:1)
   UI/orchestration layer. Owns Tkinter widgets, rendering, and user interaction.
+- [cli_quiz.py](C:/Projects/practiceISTQB/cli_quiz.py:1)
+  Interactive command-line interface built on the same exam and storage layers.
 - [exam_models.py](C:/Projects/practiceISTQB/exam_models.py:1)
   Pure exam-domain logic such as navigation, answers, marks, scoring, restart, and report generation.
 - [exam_storage.py](C:/Projects/practiceISTQB/exam_storage.py:1)
   Question-bank loading, history persistence, and randomized exam assembly.
+- [ui_layout.py](C:/Projects/practiceISTQB/ui_layout.py:1)
+  Responsive wrap and layout helpers for the Tkinter app.
 - [test_istqb_quiz_app.py](C:/Projects/practiceISTQB/test_istqb_quiz_app.py:1)
-  Unit tests for the storage and domain model layers.
+  Unit tests for the storage, domain, CLI helper, and responsive-layout layers.
 
 ### Project Ops Toolkit
 
@@ -112,6 +119,12 @@ practiceISTQB/
 python ISTQBQuizApp.py
 ```
 
+### Run The CLI
+
+```powershell
+python cli_quiz.py
+```
+
 ### Run Tests
 
 ```powershell
@@ -121,7 +134,7 @@ python -m unittest -v
 ### Compile Check
 
 ```powershell
-python -m py_compile ISTQBQuizApp.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py
+python -m py_compile ISTQBQuizApp.py cli_quiz.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py ui_layout.py
 ```
 
 ## 🧪 Testing Strategy
@@ -133,8 +146,11 @@ The current automated tests focus on **logic that should not depend on Tkinter w
 - history load/save behavior
 - exam navigation and answer state
 - mark-for-review behavior
+- timer countdown reduction
 - restart/reset logic
 - score and report generation
+- CLI parsing and rendering helpers
+- responsive layout calculations
 
 The UI layer is intentionally thinner than before, with state delegated into `ExamSession` so the most important behavior can be tested without GUI automation.
 

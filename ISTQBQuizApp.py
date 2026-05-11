@@ -23,6 +23,7 @@ from exam_storage import (
     load_questions,
     save_history,
 )
+from ui_layout import WIDE_LAYOUT, compute_wrap_lengths, determine_layout_mode
 
 BG_COLOR = "#f4efe6"
 PANEL_COLOR = "#fffaf2"
@@ -55,8 +56,8 @@ class ISTQBQuizApp:
     def __init__(self, root):
         self.root = root
         self.root.title("ISTQB CTFL v4.0 Simulator")
-        self.root.geometry("920x720")
-        self.root.minsize(860, 680)
+        self.root.geometry("1040x760")
+        self.root.minsize(720, 620)
         self.root.configure(bg=BG_COLOR)
 
         self.question_bank = self.load_questions()
@@ -66,12 +67,16 @@ class ISTQBQuizApp:
 
         self.history_window = None
         self.history_tree = None
+        self.layout_mode = None
         self.navigator_buttons = []
         self.timer_running = True
         self.timer_job = None
         self.exam_submitted = False
 
         self.setup_ui()
+        self.root.bind("<Configure>", self.on_root_configure)
+        self.apply_responsive_layout()
+        self.refresh_wrap_lengths()
         self.update_timer()
         self.load_question()
 
@@ -188,7 +193,6 @@ class ISTQBQuizApp:
         self.content.pack(fill="both", expand=True, padx=22, pady=(4, 12))
 
         self.main_column = tk.Frame(self.content, bg=BG_COLOR)
-        self.main_column.pack(side="left", fill="both", expand=True, padx=(0, 14))
 
         self.sidebar = tk.Frame(
             self.content,
@@ -197,8 +201,6 @@ class ISTQBQuizApp:
             highlightthickness=1,
             width=220,
         )
-        self.sidebar.pack(side="right", fill="y")
-        self.sidebar.pack_propagate(False)
 
         self.question_card = tk.Frame(
             self.main_column,
@@ -223,7 +225,6 @@ class ISTQBQuizApp:
             font=("Georgia", 16, "bold"),
             wraplength=760,
             justify="left",
-            height=4,
             anchor="w",
             bg=PANEL_COLOR,
             fg=TEXT_COLOR,
@@ -346,6 +347,44 @@ class ISTQBQuizApp:
             cursor="hand2",
         )
 
+    def on_root_configure(self, event):
+        """Keep the main layout responsive as the window changes size."""
+        if event.widget is not self.root:
+            return
+        self.apply_responsive_layout(event.width)
+        self.refresh_wrap_lengths(event.width)
+
+    def apply_responsive_layout(self, width=None):
+        """Switch between wide and compact content layouts."""
+        new_mode = determine_layout_mode(width or self.root.winfo_width())
+        if new_mode == self.layout_mode:
+            return
+
+        self.layout_mode = new_mode
+        self.main_column.pack_forget()
+        self.sidebar.pack_forget()
+
+        if new_mode == WIDE_LAYOUT:
+            self.main_column.pack(side="left", fill="both", expand=True, padx=(0, 14))
+            self.sidebar.configure(width=220)
+            self.sidebar.pack_propagate(False)
+            self.sidebar.pack(side="right", fill="y")
+        else:
+            self.main_column.pack(side="top", fill="both", expand=True, pady=(0, 12))
+            self.sidebar.pack_propagate(True)
+            self.sidebar.pack(side="bottom", fill="x")
+
+    def refresh_wrap_lengths(self, width=None):
+        """Recompute wrap lengths so question text scales with window width."""
+        wraps = compute_wrap_lengths(width or self.root.winfo_width(), self.layout_mode or WIDE_LAYOUT)
+        self.q_label.config(wraplength=wraps["question"])
+        for button in self.option_buttons:
+            button.config(wraplength=wraps["option"])
+        if hasattr(self, "navigator_subtitle"):
+            self.navigator_subtitle.config(wraplength=wraps["sidebar"])
+        if hasattr(self, "navigator_summary"):
+            self.navigator_summary.config(wraplength=wraps["sidebar"])
+
     def setup_navigator(self):
         """Build the question map used for direct question navigation."""
         title = tk.Label(
@@ -367,6 +406,7 @@ class ISTQBQuizApp:
             wraplength=180,
         )
         subtitle.pack(anchor="w", padx=14, pady=(0, 10))
+        self.navigator_subtitle = subtitle
 
         self.legend_frame = tk.Frame(self.sidebar, bg=PANEL_COLOR)
         self.legend_frame.pack(fill="x", padx=14, pady=(0, 10))
@@ -405,6 +445,7 @@ class ISTQBQuizApp:
             bg=PANEL_COLOR,
             fg=MUTED_TEXT,
             justify="left",
+            anchor="w",
         )
         self.navigator_summary.pack(anchor="w", padx=14, pady=(0, 14))
 
@@ -548,6 +589,7 @@ class ISTQBQuizApp:
         self.history_window = tk.Toplevel(self.root)
         self.history_window.title("Exam History")
         self.history_window.geometry("760x380")
+        self.history_window.minsize(620, 320)
         self.history_window.configure(bg=BG_COLOR)
         self.history_window.protocol("WM_DELETE_WINDOW", self.close_history_window)
 
@@ -632,6 +674,7 @@ class ISTQBQuizApp:
             button.config(bg=card_bg, activebackground=card_bg)
         self.mark_btn.config(text=mark_text, bg=mark_bg)
 
+        self.refresh_wrap_lengths()
         self.refresh_navigator()
 
     def next_q(self):
@@ -675,7 +718,7 @@ class ISTQBQuizApp:
             self.show_results(timed_out=True)
             return
 
-        self.session.time_left -= 1
+        self.session.advance_time(1)
         self.timer_job = self.root.after(1000, self.update_timer)
 
     def confirm_submit(self):
@@ -738,6 +781,7 @@ class ISTQBQuizApp:
         result_window = tk.Toplevel(self.root)
         result_window.title("Results & Explanation")
         result_window.geometry("700x560")
+        result_window.minsize(620, 420)
         result_window.configure(bg=BG_COLOR)
 
         summary_text = (

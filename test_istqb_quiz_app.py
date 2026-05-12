@@ -6,6 +6,7 @@ Date: 2026-05-10
 
 import json
 import unittest
+from datetime import datetime
 from pathlib import Path
 
 import cli_quiz
@@ -69,6 +70,49 @@ class ExamStorageTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             exam_storage.load_questions(bank_path)
 
+    def test_load_questions_rejects_non_list_bank(self):
+        bank_path = self.write_json("question_bank.json", {"q": "Not a list"})
+
+        with self.assertRaisesRegex(ValueError, "non-empty list"):
+            exam_storage.load_questions(bank_path)
+
+    def test_load_questions_rejects_non_object_record(self):
+        bank_path = self.write_json("question_bank.json", ["not an object"])
+
+        with self.assertRaisesRegex(ValueError, "not an object"):
+            exam_storage.load_questions(bank_path)
+
+    def test_load_questions_rejects_missing_required_field(self):
+        bank_path = self.write_json(
+            "question_bank.json",
+            [
+                {
+                    "q": "Missing explanation",
+                    "options": ["A", "B", "C", "D"],
+                    "answer": "A",
+                }
+            ],
+        )
+
+        with self.assertRaisesRegex(ValueError, "explanation"):
+            exam_storage.load_questions(bank_path)
+
+    def test_load_questions_rejects_wrong_option_count(self):
+        bank_path = self.write_json(
+            "question_bank.json",
+            [
+                {
+                    "q": "Broken",
+                    "options": ["A", "B", "C"],
+                    "answer": "A",
+                    "explanation": "Invalid option count.",
+                }
+            ],
+        )
+
+        with self.assertRaisesRegex(ValueError, "exactly 4"):
+            exam_storage.load_questions(bank_path)
+
     def test_build_exam_questions_returns_shuffled_copies(self):
         question_bank = [
             {
@@ -97,6 +141,25 @@ class ExamStorageTests(unittest.TestCase):
             all(bank_question["options"] == ["A", "B", "C", "D"] for bank_question in question_bank)
         )
 
+    def test_build_exam_questions_uses_smaller_bank_size(self):
+        question_bank = [
+            {
+                "q": f"Question {index}",
+                "options": ["A", "B", "C", "D"],
+                "answer": "A",
+                "explanation": "Explanation",
+            }
+            for index in range(3)
+        ]
+
+        exam = exam_storage.build_exam_questions(question_bank, exam_question_count=40)
+
+        self.assertEqual(3, len(exam))
+        self.assertEqual(
+            sorted(question["q"] for question in question_bank),
+            sorted(question["q"] for question in exam),
+        )
+
     def test_load_history_defaults_to_empty_list_when_file_missing(self):
         history_path = TEST_DATA_DIR / "exam_history.json"
 
@@ -120,6 +183,94 @@ class ExamStorageTests(unittest.TestCase):
         loaded = exam_storage.load_history(history_path)
 
         self.assertEqual(history, loaded)
+
+    def test_load_history_rejects_non_list_history(self):
+        history_path = self.write_json("exam_history.json", {"timestamp": "broken"})
+
+        with self.assertRaisesRegex(ValueError, "list"):
+            exam_storage.load_history(history_path)
+
+    def test_load_history_normalizes_entries_and_skips_non_dict_values(self):
+        history_path = self.write_json(
+            "exam_history.json",
+            [
+                "skip me",
+                {
+                    "timestamp": 123,
+                    "score": "31",
+                    "total": "40",
+                    "percent": "77.5",
+                    "result": "PASS",
+                },
+            ],
+        )
+
+        history = exam_storage.load_history(history_path)
+
+        self.assertEqual(
+            [
+                {
+                    "timestamp": "123",
+                    "score": 31,
+                    "total": 40,
+                    "percent": 77.5,
+                    "result": "PASS",
+                }
+            ],
+            history,
+        )
+
+    def test_build_history_entry_normalizes_exam_result(self):
+        result = exam_models.ExamResult(
+            score=27,
+            total=40,
+            percent=67.555,
+            passed=True,
+            report="Review",
+        )
+        timestamp = datetime(2026, 5, 10, 1, 2, 3)
+
+        entry = exam_storage.build_history_entry(result, timestamp=timestamp)
+
+        self.assertEqual(
+            {
+                "timestamp": "2026-05-10 01:02:03",
+                "score": 27,
+                "total": 40,
+                "percent": 67.56,
+                "result": "PASS",
+            },
+            entry,
+        )
+
+    def test_history_entries_newest_first_preserves_original_indexes(self):
+        history = [
+            {
+                "timestamp": "2026-05-10 01:00:00",
+                "score": 20,
+                "total": 40,
+                "percent": 50.0,
+                "result": "FAIL",
+            },
+            {
+                "timestamp": "2026-05-11 01:00:00",
+                "score": 30,
+                "total": 40,
+                "percent": 75.0,
+                "result": "PASS",
+            },
+            {
+                "timestamp": "2026-05-10 02:00:00",
+                "score": 25,
+                "total": 40,
+                "percent": 62.5,
+                "result": "FAIL",
+            },
+        ]
+
+        indexed_entries = exam_storage.history_entries_newest_first(history)
+
+        self.assertEqual([1, 2, 0], [index for index, _entry in indexed_entries])
 
 
 class ExamSessionTests(unittest.TestCase):
@@ -152,6 +303,26 @@ class ExamSessionTests(unittest.TestCase):
         self.assertEqual(["B", "D"], self.session.user_answers)
         self.assertEqual(2, self.session.answered_count())
 
+    def test_navigation_does_not_move_beyond_bounds(self):
+        self.session.prev_q()
+        self.assertEqual(0, self.session.current_q)
+
+        self.session.next_q()
+        self.session.next_q()
+
+        self.assertEqual(1, self.session.current_q)
+
+    def test_clear_answer_updates_counts(self):
+        self.session.save_answer("B")
+        self.assertEqual(1, self.session.answered_count())
+        self.assertEqual(1, self.session.remaining_count())
+
+        self.session.save_answer("")
+
+        self.assertEqual([None, None], self.session.user_answers)
+        self.assertEqual(0, self.session.answered_count())
+        self.assertEqual(2, self.session.remaining_count())
+
     def test_toggle_mark_and_jump(self):
         self.session.toggle_mark()
         self.session.jump_to_question(1)
@@ -181,6 +352,20 @@ class ExamSessionTests(unittest.TestCase):
 
         self.assertEqual(0, self.session.time_left)
 
+    def test_submitted_session_ignores_state_changes_and_timer(self):
+        self.session.save_answer("B")
+        self.session.submit()
+
+        self.session.advance_time(30)
+        self.session.next_q()
+        self.session.toggle_mark()
+        self.session.save_answer("A")
+
+        self.assertEqual(120, self.session.time_left)
+        self.assertEqual(0, self.session.current_q)
+        self.assertEqual([False, False], self.session.marked_for_review)
+        self.assertEqual(["B", None], self.session.user_answers)
+
     def test_submit_builds_result_and_locks_session(self):
         self.session.save_answer("B")
         self.session.next_q()
@@ -200,19 +385,48 @@ class ExamSessionTests(unittest.TestCase):
         self.assertEqual(1, self.session.current_q)
         self.assertEqual(["B", "A"], self.session.user_answers)
 
+    def test_submit_uses_configured_passing_threshold(self):
+        session = exam_models.ExamSession(
+            self.questions,
+            duration_seconds=120,
+            passing_percent=50.0,
+        )
+        session.save_answer("B")
+        session.next_q()
+        session.save_answer("A")
+
+        result = session.submit()
+
+        self.assertEqual(50.0, result.percent)
+        self.assertTrue(result.passed)
+
+    def test_empty_session_result_is_zero_percent_fail(self):
+        session = exam_models.ExamSession([], duration_seconds=60)
+
+        result = session.submit()
+
+        self.assertEqual(0, result.score)
+        self.assertEqual(0, result.total)
+        self.assertEqual(0.0, result.percent)
+        self.assertFalse(result.passed)
+
 
 class CliHelperTests(unittest.TestCase):
     """Tests for the command-line helper functions."""
 
     def test_parse_answer_token_supports_letters_and_numbers(self):
         self.assertEqual(0, cli_quiz.parse_answer_token("A", 4))
+        self.assertEqual(1, cli_quiz.parse_answer_token(" b ", 4))
         self.assertEqual(2, cli_quiz.parse_answer_token("3", 4))
+        self.assertIsNone(cli_quiz.parse_answer_token("D", 3))
         self.assertIsNone(cli_quiz.parse_answer_token("9", 4))
         self.assertIsNone(cli_quiz.parse_answer_token("next", 4))
 
     def test_format_duration_and_progress_bar(self):
         self.assertEqual("02:05", cli_quiz.format_duration(125))
+        self.assertEqual("00:00", cli_quiz.format_duration(-10))
         self.assertEqual("[#####-----]", cli_quiz.build_progress_bar(2, 4, width=10))
+        self.assertEqual("[----------]", cli_quiz.build_progress_bar(1, 0, width=10))
 
     def test_build_question_map_marks_current_answered_and_marked(self):
         session = exam_models.ExamSession(
@@ -247,12 +461,39 @@ class CliHelperTests(unittest.TestCase):
         self.assertIn("[02]", question_map)
         self.assertIn(" 03.", question_map)
 
+    def test_build_review_text_renders_one_question(self):
+        session = exam_models.ExamSession(
+            [
+                {
+                    "q": "Question 1",
+                    "options": ["A", "B", "C", "D"],
+                    "answer": "B",
+                    "explanation": "B is correct.",
+                    "source": "Sample",
+                    "topic": "Testing basics",
+                    "lo": "FL-1.1.1",
+                }
+            ]
+        )
+        session.save_answer("A")
+        session.submit()
+
+        review_text = cli_quiz.build_review_text(session, 0)
+
+        self.assertIn("Question 1/1: WRONG", review_text)
+        self.assertIn("Your Answer: A", review_text)
+        self.assertIn("Correct Answer: B", review_text)
+        self.assertIn("Source: Sample", review_text)
+        self.assertIn("Topic: Testing basics", review_text)
+        self.assertIn("Learning Objective: FL-1.1.1", review_text)
+
 
 class UiLayoutTests(unittest.TestCase):
     """Tests for responsive layout calculations."""
 
     def test_determine_layout_mode_switches_at_threshold(self):
         self.assertEqual(ui_layout.COMPACT_LAYOUT, ui_layout.determine_layout_mode(900))
+        self.assertEqual(ui_layout.WIDE_LAYOUT, ui_layout.determine_layout_mode(1100))
         self.assertEqual(ui_layout.WIDE_LAYOUT, ui_layout.determine_layout_mode(1280))
 
     def test_compute_wrap_lengths_expands_in_compact_mode(self):
@@ -262,6 +503,13 @@ class UiLayoutTests(unittest.TestCase):
         self.assertGreater(compact["question"], wide["question"] - 100)
         self.assertGreaterEqual(compact["sidebar"], 260)
         self.assertGreater(wide["option"], 380)
+
+    def test_compute_wrap_lengths_enforces_minimum_width(self):
+        wraps = ui_layout.compute_wrap_lengths(320, ui_layout.COMPACT_LAYOUT)
+
+        self.assertGreaterEqual(wraps["question"], 440)
+        self.assertGreaterEqual(wraps["option"], 380)
+        self.assertGreaterEqual(wraps["sidebar"], 260)
 
 
 class MergeScaffoldTests(unittest.TestCase):
@@ -287,6 +535,30 @@ class MergeScaffoldTests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             merge_scaffold.load_merge_config(config_path)
+
+    def test_load_json_records_rejects_non_list_payload(self):
+        records_path = self.write_json("records.json", {"id": "1"})
+
+        with self.assertRaisesRegex(ValueError, "JSON list"):
+            merge_scaffold.load_json_records(records_path)
+
+    def test_load_merge_config_rejects_non_object_config(self):
+        config_path = self.write_json("merge_config.json", [])
+
+        with self.assertRaisesRegex(ValueError, "JSON object"):
+            merge_scaffold.load_merge_config(config_path)
+
+    def test_normalize_record_uses_question_text_fallback_and_provenance(self):
+        record = merge_scaffold.normalize_record(
+            {"id": 7, "q": "  Question text  "},
+            source_name="sample_source",
+            authority="authoritative",
+        )
+
+        self.assertEqual("7", record.record_id)
+        self.assertEqual("Question text", record.content)
+        self.assertEqual("sample_source", record.payload["source"]["name"])
+        self.assertEqual("authoritative", record.payload["quality"]["authority"])
 
     def test_dedupe_key_normalizes_whitespace_and_case(self):
         record = merge_scaffold.MergeRecord(
@@ -324,6 +596,30 @@ class MergeScaffoldTests(unittest.TestCase):
         self.assertIs(existing, rejected)
         self.assertIn("higher-authority source", note)
         self.assertIn(note, candidate.transformation_notes)
+
+    def test_choose_preferred_record_keeps_existing_for_equal_authority(self):
+        existing = merge_scaffold.MergeRecord(
+            record_id="1",
+            content="question",
+            source_name="source_a",
+            source_record_id="A1",
+            authority="supplementary",
+            payload={},
+        )
+        candidate = merge_scaffold.MergeRecord(
+            record_id="2",
+            content="question",
+            source_name="source_b",
+            source_record_id="B1",
+            authority="supplementary",
+            payload={},
+        )
+
+        chosen, rejected, note = merge_scaffold.choose_preferred_record(existing, candidate)
+
+        self.assertIs(existing, chosen)
+        self.assertIs(candidate, rejected)
+        self.assertIn("Kept existing", note)
 
     def test_merge_records_quarantines_empty_dedupe_key(self):
         empty_record = merge_scaffold.MergeRecord(
@@ -380,6 +676,44 @@ class MergeScaffoldTests(unittest.TestCase):
         self.assertEqual(1, len(exported))
         self.assertIn("transformation_notes", exported[0])
         self.assertIn("Inserted source_a:1", audit_text)
+
+
+class EndToEndExamFlowTests(unittest.TestCase):
+    """Integration-style tests for storage-built exams executed through the domain model."""
+
+    def test_build_exam_answer_and_persist_history_flow(self):
+        question_bank = [
+            {
+                "q": "Question 1",
+                "options": ["A", "B", "C", "D"],
+                "answer": "A",
+                "explanation": "A is correct.",
+                "source": "Fixture",
+            },
+            {
+                "q": "Question 2",
+                "options": ["A", "B", "C", "D"],
+                "answer": "C",
+                "explanation": "C is correct.",
+                "source": "Fixture",
+            },
+        ]
+        questions = exam_storage.build_exam_questions(question_bank, exam_question_count=2)
+        session = exam_models.ExamSession(questions, duration_seconds=120)
+        for index, question in enumerate(questions):
+            session.jump_to_question(index)
+            session.save_answer(question["answer"])
+
+        result = session.submit()
+        history_entry = exam_storage.build_history_entry(
+            result,
+            timestamp=datetime(2026, 5, 12, 9, 30, 0),
+        )
+
+        self.assertEqual(2, result.score)
+        self.assertTrue(result.passed)
+        self.assertEqual("PASS", history_entry["result"])
+        self.assertEqual("2026-05-12 09:30:00", history_entry["timestamp"])
 
 
 if __name__ == "__main__":

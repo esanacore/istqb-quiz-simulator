@@ -7,10 +7,13 @@ This project is a **Python/Tkinter desktop quiz simulator** for **ISTQB CTFL v4.
 Copilot should assume:
 
 - the UI layer lives in `ISTQBQuizApp.py`
+- the CLI presentation layer lives in `cli_quiz.py`
 - domain logic lives in `exam_models.py`
 - persistence and question-bank logic live in `exam_storage.py`
+- responsive layout helpers live in `ui_layout.py`
 - generic dataset merge tooling lives in `merge_scaffold.py`
 - tests use Python `unittest`
+- requirements and traceability live in `SOFTWARE_REQUIREMENTS.md`, `REQUIREMENTS_TRACEABILITY_MATRIX.md`, and `TEST_PLAN.md`
 - question content belongs in `question_bank.json`, not embedded in Python
 
 ## Coding Guidance
@@ -24,6 +27,7 @@ Copilot should assume:
 
 ```powershell
 python ISTQBQuizApp.py
+python cli_quiz.py
 ```
 
 Preferred sequence for meaningful improvements:
@@ -42,7 +46,9 @@ When generating tests:
 - use `unittest`
 - test domain logic directly without requiring a live Tkinter window
 - cover navigation, restart, scoring, and data validation paths
+- cover CLI helper behavior when changing terminal commands or review output
 - cover merge normalization and conflict-resolution behavior when editing dataset tooling
+- update the requirements traceability matrix when adding or changing requirements or tests
 
 ## Documentation Guidance
 
@@ -50,6 +56,7 @@ When generating tests:
 - Use Markdown for repository documentation.
 - Keep comments concise and useful.
 - Keep architecture, testing, and contribution docs aligned with the current code layout.
+- Keep requirements testable and mapped to automated/manual verification.
 
 ## Content Guidance
 

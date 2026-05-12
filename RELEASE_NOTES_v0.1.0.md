@@ -14,14 +14,15 @@ This release establishes the first complete baseline for the project as both:
 - shuffled answer choices per attempt
 - question navigator with direct jumping and state visibility
 - mark-for-review workflow
-- persistent attempt history with selective deletion
+- persistent attempt history with newest-first display, selective deletion, and clear-all controls
 - post-exam scoring, explanations, and source metadata review
+- terminal-first CLI exam flow with per-question review navigation
 
 ## Codebase Improvements
 
 - UI/domain/storage responsibilities split into separate modules
 - Google-style docstrings added across Python modules
-- unit tests for domain and storage logic
+- 41 automated tests for domain, storage, CLI helper, merge-toolkit, layout, and integration-style exam flow logic
 - `.gitignore` added for local/runtime artifacts
 
 ## Documentation Additions
@@ -29,6 +30,9 @@ This release establishes the first complete baseline for the project as both:
 - `README.md`
 - `ARCHITECTURE.md`
 - `TESTING.md`
+- `TEST_PLAN.md`
+- `SOFTWARE_REQUIREMENTS.md`
+- `REQUIREMENTS_TRACEABILITY_MATRIX.md`
 - `CONTRIBUTING.md`
 - `AGENTS.md`
 - `.github/copilot-instructions.md`

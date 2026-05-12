@@ -23,7 +23,7 @@ jobs:
         run: python --version
 
       - name: Run compile checks
-        run: python -m py_compile ISTQBQuizApp.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py
+        run: python -m py_compile ISTQBQuizApp.py cli_quiz.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py ui_layout.py
 
       - name: Run unit tests
         run: python -m unittest -v

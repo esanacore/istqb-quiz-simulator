@@ -6,8 +6,8 @@ This guide explains how to use the generic merge scaffold with a JSON config fil
 
 ## Files
 
-- [merge_scaffold.py](C:/Projects/practiceISTQB/merge_scaffold.py:1)
-- [dataset_merge_config.template.json](C:/Projects/practiceISTQB/dataset_merge_config.template.json:1)
+- [merge_scaffold.py](merge_scaffold.py)
+- [dataset_merge_config.template.json](dataset_merge_config.template.json)
 
 ## Basic Flow
 

@@ -377,13 +377,17 @@ Give this file to a coding assistant or collaborator and ask them to:
 
 ---
 
-## 22. Optional Future Companion Docs
+## 22. Companion Docs In This Toolkit
 
-If you want to turn this into a fuller reusable methodology, add:
+This repository already includes companion docs that turn the framework into a reusable project-operations toolkit:
 
 - `SESSION_CHECKLIST.md`
 - `REFACTOR_PLAYBOOK.md`
 - `AI_COLLABORATION_GUIDE.md`
-- `REPO_BOOTSTRAP_TEMPLATE.md`
+- `DATASET_INTEGRATION_PLAYBOOK.md`
+- `MERGE_CHECKLIST.md`
+- `DATASET_SCHEMA_TEMPLATE.md`
+- `MERGE_CLI_GUIDE.md`
+- `COPILOT_TASK_BACKLOG.md`
 
-That would turn this from a framework document into a reusable project-operations toolkit.
+Future toolkit additions could include a `REPO_BOOTSTRAP_TEMPLATE.md` if repeated new-project setup becomes common.

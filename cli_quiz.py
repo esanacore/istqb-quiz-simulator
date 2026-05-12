@@ -7,20 +7,21 @@ import os
 import shutil
 import textwrap
 import time
-from datetime import datetime
+from json import JSONDecodeError
 
-from exam_models import ExamSession
+from exam_models import PASSING_PERCENT, ExamSession
 from exam_storage import (
     EXAM_QUESTION_COUNT,
     HISTORY_PATH,
     QUESTION_BANK_PATH,
+    build_history_entry,
     build_exam_questions,
+    history_entries_newest_first,
     load_history,
     load_questions,
     save_history,
 )
 
-PASSING_PERCENT = 65.0
 RESET = "\033[0m"
 BOLD = "\033[1m"
 DIM = "\033[2m"
@@ -95,6 +96,31 @@ def build_question_map(session, columns=10):
     for start in range(0, len(tokens), columns):
         rows.append(" ".join(tokens[start : start + columns]))
     return "\n".join(rows)
+
+
+def build_review_text(session, index):
+    """Build a focused review block for one submitted question."""
+    question = session.questions[index]
+    user_pick = session.user_answers[index]
+    is_correct = user_pick == question["answer"]
+    status = "CORRECT" if is_correct else "WRONG"
+
+    lines = [
+        f"Question {index + 1}/{len(session.questions)}: {status}",
+        "",
+        question["q"],
+        "",
+        f"Your Answer: {user_pick}",
+        f"Correct Answer: {question['answer']}",
+        f"Explanation: {question['explanation']}",
+    ]
+    if question.get("source"):
+        lines.append(f"Source: {question['source']}")
+    if question.get("topic"):
+        lines.append(f"Topic: {question['topic']}")
+    if question.get("lo"):
+        lines.append(f"Learning Objective: {question['lo']}")
+    return "\n".join(lines)
 
 
 class ISTQBQuizCLI:
@@ -245,9 +271,10 @@ class ISTQBQuizCLI:
         print("clear: clear the current answer")
         print("summary: show answered, marked, and unanswered counts")
         print("history: show stored exam history")
+        print("clear-history: delete all stored exam history")
         print("submit: finish the exam and score it")
         print("restart: start a fresh randomized exam")
-        print("review: show the last detailed review after submission")
+        print("review: inspect explanations after submission")
         print("quit: exit the CLI")
         print()
         self.pause()
@@ -262,14 +289,28 @@ class ISTQBQuizCLI:
             self.pause()
             return
 
-        for index, entry in enumerate(self.history[-10:], start=max(1, len(self.history) - 9)):
+        for index, entry in history_entries_newest_first(self.history)[:10]:
             print(
-                f"{index:02d}. {entry['timestamp']}  "
+                f"{index + 1:02d}. {entry['timestamp']}  "
                 f"{entry['score']}/{entry['total']}  "
                 f"{entry['percent']:.2f}%  {entry['result']}"
             )
         print()
         self.pause()
+
+    def clear_history(self):
+        """Clear all stored history after confirmation."""
+        if not self.history:
+            self.clear_screen()
+            print("No stored attempts to clear.")
+            print()
+            self.pause()
+            return
+
+        command = self.prompt("Delete all stored history? [y/N]: ").lower()
+        if command in {"y", "yes"}:
+            self.history.clear()
+            save_history(self.history, HISTORY_PATH)
 
     def show_summary(self):
         """Display attempt status details."""
@@ -296,21 +337,13 @@ class ISTQBQuizCLI:
         print()
         self.pause()
 
-    def append_history(self, result_text):
+    def append_history(self):
         """Persist the latest exam attempt."""
-        self.history.append(
-            {
-                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "score": self.last_result.score,
-                "total": self.last_result.total,
-                "percent": round(self.last_result.percent, 2),
-                "result": result_text,
-            }
-        )
+        self.history.append(build_history_entry(self.last_result))
         save_history(self.history, HISTORY_PATH)
 
     def show_review(self):
-        """Display the detailed post-exam review report."""
+        """Display a navigable post-exam review."""
         if self.last_result is None:
             self.clear_screen()
             print("No completed exam to review yet.")
@@ -318,11 +351,46 @@ class ISTQBQuizCLI:
             self.pause()
             return
 
-        self.clear_screen()
-        print(style("Detailed Review", BOLD, CYAN))
-        print(self.last_result.report)
-        print()
-        self.pause()
+        review_index = 0
+        while True:
+            self.clear_screen()
+            print(style("Detailed Review", BOLD, CYAN))
+            print(build_review_text(self.session, review_index))
+            print()
+            print("Commands: next | prev | jump <n> | missed | marked | all | close")
+            command = input("review> ").strip().lower()
+            if command in {"", "next"}:
+                review_index = min(len(self.session.questions) - 1, review_index + 1)
+            elif command == "prev":
+                review_index = max(0, review_index - 1)
+            elif command.startswith("jump "):
+                _, _, raw_index = command.partition(" ")
+                if raw_index.isdigit():
+                    review_index = max(0, min(len(self.session.questions) - 1, int(raw_index) - 1))
+            elif command == "missed":
+                missed_indexes = [
+                    index
+                    for index, question in enumerate(self.session.questions)
+                    if self.session.user_answers[index] != question["answer"]
+                ]
+                if missed_indexes:
+                    review_index = missed_indexes[0]
+            elif command == "marked":
+                marked_indexes = [
+                    index
+                    for index, is_marked in enumerate(self.session.marked_for_review)
+                    if is_marked
+                ]
+                if marked_indexes:
+                    review_index = marked_indexes[0]
+            elif command == "all":
+                self.clear_screen()
+                print(style("Full Review", BOLD, CYAN))
+                print(self.last_result.report)
+                print()
+                self.pause()
+            elif command in {"close", "quit", "q"}:
+                return
 
     def submit_exam(self, timed_out=False):
         """Submit the active exam and show the score summary."""
@@ -333,7 +401,7 @@ class ISTQBQuizCLI:
         self.exam_submitted = True
         self.last_result = self.session.submit()
         result_text = "PASS" if self.last_result.passed else "FAIL"
-        self.append_history(result_text)
+        self.append_history()
 
         self.clear_screen()
         banner_color = GREEN if self.last_result.passed else RED
@@ -403,6 +471,9 @@ class ISTQBQuizCLI:
         if command == "history":
             self.show_history()
             return True
+        if command == "clear-history":
+            self.clear_history()
+            return True
         if command == "submit":
             self.confirm_submit()
             return True
@@ -428,6 +499,9 @@ class ISTQBQuizCLI:
             return True
         if command == "history":
             self.show_history()
+            return True
+        if command == "clear-history":
+            self.clear_history()
             return True
         if command == "restart":
             self.restart_exam()
@@ -458,16 +532,20 @@ class ISTQBQuizCLI:
                 print()
                 self.pause()
 
-
 def main():
     """Run the CLI simulator."""
-    app = ISTQBQuizCLI()
     try:
+        app = ISTQBQuizCLI()
         app.run()
+    except (OSError, ValueError, JSONDecodeError) as exc:
+        print(f"Unable to load quiz data: {exc}")
+        return 1
     except KeyboardInterrupt:
         print()
         print("Exiting.")
+        return 0
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

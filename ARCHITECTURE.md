@@ -10,15 +10,24 @@ The application is intentionally split into **three layers**:
 
 This keeps Tkinter concerns separate from logic that should be easy to test and maintain.
 
+The repository also maintains SQA artifacts:
+
+- [SOFTWARE_REQUIREMENTS.md](SOFTWARE_REQUIREMENTS.md)
+- [REQUIREMENTS_TRACEABILITY_MATRIX.md](REQUIREMENTS_TRACEABILITY_MATRIX.md)
+- [TEST_PLAN.md](TEST_PLAN.md)
+- [TESTING.md](TESTING.md)
+
+Those documents define testable requirements, map requirements to automated/manual checks, and record known verification gaps.
+
 ## Layers
 
 ### 1. Presentation Layer
 
 Files:
 
-- [ISTQBQuizApp.py](C:/Projects/practiceISTQB/ISTQBQuizApp.py:1)
-- [cli_quiz.py](C:/Projects/practiceISTQB/cli_quiz.py:1)
-- [ui_layout.py](C:/Projects/practiceISTQB/ui_layout.py:1)
+- [ISTQBQuizApp.py](ISTQBQuizApp.py)
+- [cli_quiz.py](cli_quiz.py)
+- [ui_layout.py](ui_layout.py)
 
 Responsibilities:
 
@@ -33,7 +42,7 @@ The presentation layer should not own core scoring or navigation rules beyond de
 
 ### 2. Domain Layer
 
-File: [exam_models.py](C:/Projects/practiceISTQB/exam_models.py:1)
+File: [exam_models.py](exam_models.py)
 
 Responsibilities:
 
@@ -43,6 +52,7 @@ Responsibilities:
 - manage mark-for-review state
 - reset attempts
 - build result summaries and review reports
+- own the pass/fail threshold used by both presentation surfaces
 
 Primary types:
 
@@ -53,12 +63,13 @@ This layer is pure Python and intentionally has no Tkinter dependency.
 
 ### 3. Storage Layer
 
-File: [exam_storage.py](C:/Projects/practiceISTQB/exam_storage.py:1)
+File: [exam_storage.py](exam_storage.py)
 
 Responsibilities:
 
 - load and validate `question_bank.json`
 - load and save `exam_history.json`
+- normalize completed attempts into history records
 - assemble randomized exam attempts from the larger bank
 - shuffle answer order while preserving correctness
 
@@ -68,23 +79,26 @@ This layer is where file-backed behavior and question-pool rules should live.
 
 Files:
 
-- [merge_scaffold.py](C:/Projects/practiceISTQB/merge_scaffold.py:1)
-- [DATASET_INTEGRATION_PLAYBOOK.md](C:/Projects/practiceISTQB/DATASET_INTEGRATION_PLAYBOOK.md:1)
-- [MERGE_CHECKLIST.md](C:/Projects/practiceISTQB/MERGE_CHECKLIST.md:1)
-- [DATASET_SCHEMA_TEMPLATE.md](C:/Projects/practiceISTQB/DATASET_SCHEMA_TEMPLATE.md:1)
+- [merge_scaffold.py](merge_scaffold.py)
+- [DATASET_INTEGRATION_PLAYBOOK.md](DATASET_INTEGRATION_PLAYBOOK.md)
+- [MERGE_CHECKLIST.md](MERGE_CHECKLIST.md)
+- [DATASET_SCHEMA_TEMPLATE.md](DATASET_SCHEMA_TEMPLATE.md)
+- [MERGE_CLI_GUIDE.md](MERGE_CLI_GUIDE.md)
+- [dataset_merge_config.template.json](dataset_merge_config.template.json)
 
 Responsibilities:
 
 - define how multiple partial datasets should be normalized and merged
 - preserve provenance across combined records
 - provide a reusable merge scaffold for future projects
+- document the config-driven merge CLI workflow
 - make dataset integration repeatable instead of ad hoc
 
 ## Data Files
 
 ### Question Bank
 
-File: [question_bank.json](C:/Projects/practiceISTQB/question_bank.json:1)
+File: [question_bank.json](question_bank.json)
 
 Contains:
 
@@ -117,7 +131,7 @@ Contains:
 4. UI renders the active question and navigator state.
 5. User answers, jumps, marks, and submits.
 6. Domain layer computes the score and review report.
-7. UI writes the attempt to history and displays results.
+7. UI asks storage to normalize the history record, persists the attempt, and displays results.
 
 ## Design Notes
 

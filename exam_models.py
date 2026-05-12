@@ -7,6 +7,9 @@ Date: 2026-05-10
 from dataclasses import dataclass
 
 
+PASSING_PERCENT = 65.0
+
+
 @dataclass
 class ExamResult:
     """Represents the outcome of a completed exam attempt.
@@ -36,11 +39,13 @@ class ExamSession:
     Args:
         questions: Exam questions selected for the current attempt.
         duration_seconds: Total countdown time allocated to the attempt.
+        passing_percent: Score percentage required to pass the attempt.
     """
 
-    def __init__(self, questions, duration_seconds=60 * 60):
+    def __init__(self, questions, duration_seconds=60 * 60, passing_percent=PASSING_PERCENT):
         self.questions = questions
         self.duration_seconds = duration_seconds
+        self.passing_percent = passing_percent
         self.restart()
 
     def restart(self, questions=None):
@@ -149,7 +154,7 @@ class ExamSession:
 
         total = len(self.questions)
         percent = (score / total) * 100 if total else 0.0
-        passed = percent >= 65
+        passed = percent >= self.passing_percent
         return ExamResult(score=score, total=total, percent=percent, passed=passed, report=report)
 
     def submit(self):

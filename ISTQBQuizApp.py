@@ -9,7 +9,6 @@ live in ``exam_storage.py``.
 """
 
 from json import JSONDecodeError
-from datetime import datetime
 import tkinter as tk
 from tkinter import messagebox, scrolledtext, ttk
 
@@ -18,7 +17,9 @@ from exam_storage import (
     EXAM_QUESTION_COUNT,
     HISTORY_PATH,
     QUESTION_BANK_PATH,
+    build_history_entry,
     build_exam_questions,
+    history_entries_newest_first,
     load_history,
     load_questions,
     save_history,
@@ -509,17 +510,9 @@ class ISTQBQuizApp:
         self.session.jump_to_question(index)
         self.load_question()
 
-    def add_history_entry(self, score, total, percent, result_text):
+    def add_history_entry(self, result):
         """Append a completed attempt to persistent history."""
-        self.history.append(
-            {
-                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "score": score,
-                "total": total,
-                "percent": round(percent, 2),
-                "result": result_text,
-            }
-        )
+        self.history.append(build_history_entry(result))
         self.save_history()
         self.refresh_history_summary()
         self.refresh_history_tree()
@@ -552,6 +545,23 @@ class ISTQBQuizApp:
         self.refresh_history_summary()
         self.refresh_history_tree()
 
+    def clear_history(self):
+        """Clear all stored history after confirmation."""
+        if not self.history:
+            messagebox.showinfo("Clear History", "There are no history entries to clear.")
+            return
+
+        if not messagebox.askyesno(
+            "Clear History",
+            "Remove all stored history entries?",
+        ):
+            return
+
+        self.history.clear()
+        self.save_history()
+        self.refresh_history_summary()
+        self.refresh_history_tree()
+
     def refresh_history_tree(self):
         """Reload the history table with the current in-memory records."""
         if self.history_tree is None:
@@ -560,7 +570,7 @@ class ISTQBQuizApp:
         for item in self.history_tree.get_children():
             self.history_tree.delete(item)
 
-        for index, entry in enumerate(self.history):
+        for index, entry in history_entries_newest_first(self.history):
             self.history_tree.insert(
                 "",
                 "end",
@@ -631,6 +641,15 @@ class ISTQBQuizApp:
             width=14,
             activebackground="#e8c2c2",
         ).pack(side="left")
+        self._build_action_button(
+            button_frame,
+            "Clear History",
+            self.clear_history,
+            bg="#f3d9d9",
+            fg=TEXT_COLOR,
+            width=12,
+            activebackground="#e8c2c2",
+        ).pack(side="left", padx=(10, 0))
         self._build_action_button(
             button_frame,
             "Close",
@@ -767,6 +786,7 @@ class ISTQBQuizApp:
         if self.exam_submitted:
             return
 
+        self.save_answer()
         self.exam_submitted = True
         self.timer_running = False
         self.cancel_timer()
@@ -776,7 +796,7 @@ class ISTQBQuizApp:
 
         result = self.session.submit()
         result_text = "PASS" if result.passed else "FAIL"
-        self.add_history_entry(result.score, result.total, result.percent, result_text)
+        self.add_history_entry(result)
 
         result_window = tk.Toplevel(self.root)
         result_window.title("Results & Explanation")

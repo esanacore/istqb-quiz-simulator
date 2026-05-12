@@ -23,22 +23,28 @@ When making changes, prefer this order:
 ## Code Standards
 
 - Use **Python** with clear, explicit logic.
-- Keep UI concerns in [ISTQBQuizApp.py](C:/Projects/practiceISTQB/ISTQBQuizApp.py:1).
-- Keep CLI presentation concerns in [cli_quiz.py](C:/Projects/practiceISTQB/cli_quiz.py:1).
-- Keep domain logic in [exam_models.py](C:/Projects/practiceISTQB/exam_models.py:1).
-- Keep persistence and exam assembly logic in [exam_storage.py](C:/Projects/practiceISTQB/exam_storage.py:1).
+- Keep UI concerns in [ISTQBQuizApp.py](ISTQBQuizApp.py).
+- Keep CLI presentation concerns in [cli_quiz.py](cli_quiz.py).
+- Keep domain logic in [exam_models.py](exam_models.py).
+- Keep persistence and exam assembly logic in [exam_storage.py](exam_storage.py).
 - Use **Google-style docstrings** for modules, classes, and non-trivial functions.
 - Prefer concise, high-signal comments over excessive inline narration.
 
 ## Question Content Rules
 
 - Do not hardcode question content in Python files.
-- Add or modify question content in [question_bank.json](C:/Projects/practiceISTQB/question_bank.json:1).
+- Add or modify question content in [question_bank.json](question_bank.json).
 - Preserve source traceability where possible.
 - Do not present unsourced content as official ISTQB material.
 - Preserve answer correctness when randomization or structure changes are made.
 
 ## Testing Expectations
+
+Requirements and tests should stay traceable. When adding or materially changing behavior, update:
+
+- [SOFTWARE_REQUIREMENTS.md](SOFTWARE_REQUIREMENTS.md)
+- [REQUIREMENTS_TRACEABILITY_MATRIX.md](REQUIREMENTS_TRACEABILITY_MATRIX.md)
+- [TEST_PLAN.md](TEST_PLAN.md) if the verification approach changes
 
 If you change logic in:
 
@@ -46,9 +52,11 @@ If you change logic in:
 - `exam_storage.py`
 - scoring
 - history behavior
+- CLI command/review behavior
 - question assembly
+- merge-toolkit behavior
 
-you should update or add unit tests in [test_istqb_quiz_app.py](C:/Projects/practiceISTQB/test_istqb_quiz_app.py:1).
+you should update or add unit tests in [test_istqb_quiz_app.py](test_istqb_quiz_app.py).
 
 ## Verification Checklist
 

@@ -7,6 +7,7 @@ Date: 2026-05-10
 import json
 import random
 from copy import deepcopy
+from datetime import datetime
 from pathlib import Path
 
 
@@ -101,6 +102,44 @@ def save_history(history, history_path=HISTORY_PATH):
     """
     with Path(history_path).open("w", encoding="utf-8") as handle:
         json.dump(history, handle, indent=2)
+
+
+def build_history_entry(result, timestamp=None):
+    """Create a normalized attempt-history record from an exam result.
+
+    Args:
+        result: Completed exam result with score, total, percent, and passed fields.
+        timestamp: Optional ``datetime`` used for deterministic tests.
+
+    Returns:
+        A history dictionary ready to append and persist.
+    """
+    attempt_time = timestamp or datetime.now()
+    return {
+        "timestamp": attempt_time.strftime("%Y-%m-%d %H:%M:%S"),
+        "score": result.score,
+        "total": result.total,
+        "percent": round(result.percent, 2),
+        "result": "PASS" if result.passed else "FAIL",
+    }
+
+
+def history_entries_newest_first(history):
+    """Return history entries paired with original indexes, newest first.
+
+    Args:
+        history: List of attempt-history dictionaries in persisted order.
+
+    Returns:
+        A list of ``(original_index, entry)`` tuples sorted by timestamp
+        descending. Original indexes are preserved for delete operations.
+    """
+    indexed_history = list(enumerate(history))
+    return sorted(
+        indexed_history,
+        key=lambda item: (item[1].get("timestamp", ""), item[0]),
+        reverse=True,
+    )
 
 
 def build_exam_questions(question_bank, exam_question_count=EXAM_QUESTION_COUNT):

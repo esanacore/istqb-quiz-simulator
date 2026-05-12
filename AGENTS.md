@@ -20,7 +20,11 @@ This repository also contains a reusable **project-improvement and dataset-integ
 - `exam_models.py`
   Pure exam-state logic. Prefer adding business rules here instead of embedding them in the UI.
 - `exam_storage.py`
-  Question loading, validation, randomized exam assembly, and history persistence.
+  Question loading, validation, randomized exam assembly, history-entry normalization, and history persistence.
+- `cli_quiz.py`
+  Terminal UI built on the same exam-state and storage layers as the desktop app.
+- `ui_layout.py`
+  Pure responsive-layout helper logic for the Tkinter app.
 - `merge_scaffold.py`
   Generic merge CLI scaffold for combining multiple source datasets into one normalized output.
 - `question_bank.json`
@@ -33,15 +37,22 @@ Supporting docs worth keeping aligned:
 - `README.md`
 - `ARCHITECTURE.md`
 - `TESTING.md`
+- `TEST_PLAN.md`
+- `SOFTWARE_REQUIREMENTS.md`
+- `REQUIREMENTS_TRACEABILITY_MATRIX.md`
 - `CONTRIBUTING.md`
+- `COPILOT_TASK_BACKLOG.md`
 - `PROJECT_EVOLUTION_FRAMEWORK.md`
 - `DATASET_INTEGRATION_PLAYBOOK.md`
+- `MERGE_CLI_GUIDE.md`
 
 ## Working Rules
 
 - Inspect the current repo state before changing structure or docs.
 - Prefer changes that keep domain logic out of Tkinter callbacks.
 - Add or update unit tests when changing behavior in `exam_models.py` or `exam_storage.py`.
+- Update the requirements traceability matrix when adding, removing, or materially changing requirements or tests.
+- Keep requirements testable and assign stable requirement IDs for new behavior.
 - If changing merge behavior, keep `merge_scaffold.py`, `MERGE_CLI_GUIDE.md`, and the dataset toolkit docs consistent.
 - Treat question provenance as important. New questions should be source-backed and traceable.
 - Preserve answer correctness when shuffling options.
@@ -70,7 +81,7 @@ Before finishing meaningful code changes, run:
 
 ```powershell
 python -m unittest -v
-python -m py_compile ISTQBQuizApp.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py
+python -m py_compile ISTQBQuizApp.py cli_quiz.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py ui_layout.py
 ```
 
 ## Preferred Improvement Priorities

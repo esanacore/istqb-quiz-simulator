@@ -11,3 +11,4 @@ exam_history.json
 # Common local environment noise
 .DS_Store
 Thumbs.db
+.idea/

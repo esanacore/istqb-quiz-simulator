@@ -10,11 +10,26 @@ Use these tasks one at a time.
 
 ## Priority 1: Safe High-Value Improvements
 
-### 1. Add topic metadata to the question bank
+### 1. Add lightweight UI smoke checks
+
+Goal:
+
+- add guarded smoke tests or a documented manual script for desktop startup, history dialog, result dialog, and navigator rendering
+
+Why:
+
+- the requirements traceability matrix currently marks several Tkinter behaviors as manual or partial
+
+Constraints:
+
+- keep UI tests optional or robust in headless environments
+
+### 2. Add topic metadata to the question bank
 
 Goal:
 
 - add a `topic` field to all questions in `question_bank.json`
+- current baseline: `0/96` questions have topic metadata
 
 Why:
 
@@ -27,11 +42,12 @@ Constraints:
 - do not alter answer correctness
 - preserve existing source metadata
 
-### 2. Add learning objective metadata to the question bank
+### 3. Add learning objective metadata to the question bank
 
 Goal:
 
 - add an `lo` or `learning_objective` field for each question
+- current baseline: `0/96` questions have learning-objective metadata
 
 Why:
 
@@ -42,57 +58,27 @@ Constraints:
 
 - keep schema consistent across records
 
-### 3. Add merge-scaffold unit tests
+### 4. Add source/topic-aware review filtering
 
 Goal:
 
-- create tests for `merge_scaffold.py`
+- let users filter reviewed questions by source now, and by topic once metadata exists
 
 Why:
 
-- the merge toolkit is currently documented and runnable, but not yet unit tested
-
-Suggested coverage:
-
-- config loading
-- duplicate key generation
-- authority-based conflict resolution
-- quarantine behavior for empty keys
-
-### 4. Add history sorting in the history window
-
-Goal:
-
-- show most recent attempts first
-
-Why:
-
-- better usability
+- improves post-exam study workflow
+- builds on the CLI per-question review pattern without requiring a new exam mode
 
 Constraints:
 
-- do not break delete behavior
-
-### 5. Add a “Clear History” action with confirmation
-
-Goal:
-
-- allow clearing all stored attempts in one action
-
-Why:
-
-- useful for resets and fresh study cycles
-
-Constraints:
-
-- require confirmation
-- update UI immediately after deletion
+- keep filtering presentation-layer only until topic metadata is complete
+- do not change scoring or history schema for this task
 
 ---
 
 ## Priority 2: Targeted Product Improvements
 
-### 6. Add weak-area study mode
+### 5. Add weak-area study mode
 
 Goal:
 
@@ -104,10 +90,11 @@ Why:
 
 Recommended design:
 
+- complete topic metadata first
 - track topic-level misses in history or a separate stats file
 - bias question selection, but do not remove randomness entirely
 
-### 7. Add exam settings dialog
+### 6. Add exam settings dialog
 
 Goal:
 
@@ -121,17 +108,7 @@ Constraints:
 
 - preserve current defaults of `40` questions and `60` minutes
 
-### 8. Add question search/filter tools for review mode
-
-Goal:
-
-- let users filter reviewed questions by source, topic, or result
-
-Why:
-
-- improves post-exam study workflow
-
-### 9. Improve result-window formatting
+### 7. Improve result-window formatting
 
 Goal:
 
@@ -143,7 +120,7 @@ Ideas:
 - per-question status headers
 - optional summary by topic
 
-### 10. Add export of exam history to JSON or CSV
+### 8. Add export of exam history to JSON or CSV
 
 Goal:
 
@@ -157,7 +134,7 @@ Why:
 
 ## Priority 3: Structural / Maintenance Improvements
 
-### 11. Split Tkinter dialogs into dedicated classes
+### 9. Split Tkinter dialogs into dedicated classes
 
 Goal:
 
@@ -171,7 +148,7 @@ Constraints:
 
 - do not move domain logic back into the UI layer
 
-### 12. Add dedicated validation helpers to `exam_storage.py`
+### 10. Add dedicated validation helpers to `exam_storage.py`
 
 Goal:
 
@@ -181,7 +158,7 @@ Why:
 
 - improves readability and reuse
 
-### 13. Add typed aliases or light typing improvements
+### 11. Add typed aliases or light typing improvements
 
 Goal:
 
@@ -195,7 +172,7 @@ Constraints:
 
 - keep typing pragmatic, not overengineered
 
-### 14. Add a reusable data-import pipeline for question-bank expansion
+### 12. Add a reusable data-import pipeline for question-bank expansion
 
 Goal:
 
@@ -205,7 +182,7 @@ Why:
 
 - reduces manual JSON editing risk
 
-### 15. Add repository automation for merge-toolkit smoke validation
+### 13. Add repository automation for merge-toolkit smoke validation
 
 Goal:
 
@@ -234,6 +211,22 @@ When using this backlog with Copilot:
 
 If starting immediately, use this order:
 
-1. add merge-scaffold unit tests
+1. add lightweight UI smoke checks
 2. add topic metadata to the question bank
-3. add history sorting in the history window
+3. add learning objective metadata to the question bank
+
+---
+
+## Completed / Baseline Tasks
+
+These are already represented in the current codebase and tests:
+
+- merge-scaffold unit tests for config loading, dedupe keys, authority-based conflict resolution, quarantine behavior, and export helpers
+- shared pass-threshold behavior in `exam_models.py`
+- shared history-entry normalization in `exam_storage.py`
+- CLI per-question review rendering and navigation
+- newest-first history display while preserving delete behavior
+- confirmed clear-history actions in the desktop history window and CLI
+- explicit non-object question-bank record validation test
+- 41-test automated suite across storage, domain, CLI helpers, layout helpers, merge toolkit, and integration-style exam flow
+- SQA requirements, test plan, and requirements traceability matrix documents

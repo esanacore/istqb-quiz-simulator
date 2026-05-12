@@ -6,9 +6,15 @@ This repository uses **Python `unittest`** for logic-level automated tests.
 
 Primary test file:
 
-- [test_istqb_quiz_app.py](C:/Projects/practiceISTQB/test_istqb_quiz_app.py:1)
+- [test_istqb_quiz_app.py](test_istqb_quiz_app.py)
 
 The current suite focuses on **UI-independent behavior** because that provides the highest confidence-to-effort ratio for this project.
+
+For the formal SQA view, see:
+
+- [SOFTWARE_REQUIREMENTS.md](SOFTWARE_REQUIREMENTS.md)
+- [REQUIREMENTS_TRACEABILITY_MATRIX.md](REQUIREMENTS_TRACEABILITY_MATRIX.md)
+- [TEST_PLAN.md](TEST_PLAN.md)
 
 ## What Is Covered
 
@@ -17,11 +23,17 @@ The current suite focuses on **UI-independent behavior** because that provides t
 The suite currently verifies:
 
 - valid question-bank loading
+- rejection of malformed question-bank files
 - rejection of invalid answer definitions
 - randomized exam generation
+- smaller-bank exam sizing behavior
 - preservation of correct answers after option shuffling
 - history load behavior when no history file exists
+- malformed history rejection
+- history primitive normalization
 - history save/load round-trip behavior
+- normalized history record creation
+- newest-first history ordering
 
 ### Domain Tests
 
@@ -29,11 +41,14 @@ The suite currently verifies:
 
 - question navigation
 - answer persistence
+- answer clearing
 - mark-for-review behavior
 - timer countdown reduction
 - restart/reset behavior
 - submission and result generation
 - score calculation
+- empty-session result behavior
+- configurable pass-threshold behavior
 - session lock behavior after submission
 
 ### CLI/Layout Helper Tests
@@ -42,8 +57,33 @@ The suite also verifies:
 
 - CLI answer parsing
 - CLI progress and map rendering helpers
+- CLI per-question review rendering
 - responsive layout mode selection
+- responsive minimum wrap constraints
 - responsive wrap-length calculations
+
+### Merge Toolkit Tests
+
+The suite also verifies:
+
+- source JSON payload validation
+- merge config validation
+- normalization fallback behavior
+- provenance preservation
+- dedupe key generation
+- authority-based conflict resolution
+- equal-authority duplicate handling
+- quarantine behavior
+- merged/quarantined/audit export helpers
+
+### Integration-Style Tests
+
+The suite includes an end-to-end style check for:
+
+- storage-built exam question assembly
+- answering every selected question through `ExamSession`
+- submission and score generation
+- normalized history-entry creation
 
 ## Why UI Logic Is Not Heavily Unit Tested
 
@@ -57,6 +97,8 @@ The current architecture intentionally moves important logic into `exam_models.p
 
 ## How To Run Tests
 
+Use `python3` instead of `python` if your local environment does not expose `python`.
+
 ```powershell
 python -m unittest -v
 ```
@@ -66,6 +108,12 @@ python -m unittest -v
 ```powershell
 python -m py_compile ISTQBQuizApp.py cli_quiz.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py ui_layout.py
 ```
+
+Expected current baseline:
+
+- `40` automated tests
+- all tests pass
+- compile check passes
 
 ## Recommended Future Testing Improvements
 
@@ -81,11 +129,7 @@ Add tests for:
 
 Add tests for:
 
-- malformed history files
-- missing required question fields
-- wrong option counts
-- non-dictionary entries in source files
-- merge scaffold conflict and quarantine behavior
+- additional merge scaffold conflict shapes as new rules are added
 
 ### 3. Add UI Smoke Coverage
 

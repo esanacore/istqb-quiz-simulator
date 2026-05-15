@@ -18,8 +18,18 @@ Unit tests cover deterministic logic that can run without a GUI:
 - scoring and report generation
 - history normalization and ordering
 - CLI parsing/rendering helpers
+- CLI startup and command-loop flows through mocked input
 - responsive layout calculations
 - merge scaffold normalization, dedupe, conflict handling, and export helpers
+
+### Desktop Smoke Tests
+
+Lightweight desktop smoke tests exercise selected Tkinter workflows with a hidden root window:
+
+- jump-to-question answer persistence
+- result submission and control disabling
+- history window creation and ordering
+- restart reset behavior
 
 ### Integration-Style Tests
 
@@ -34,6 +44,18 @@ Current integration-style coverage:
 Tkinter windows and full CLI interactive loops are primarily manual for now because the highest-risk logic is isolated in UI-independent modules.
 
 Manual checks are listed in `REQUIREMENTS_TRACEABILITY_MATRIX.md`.
+
+### Copilot Review Automation
+
+The repository also uses a repo-scoped Copilot review stack to add specialist reviewer perspectives for:
+
+- documentation drift
+- unit and integration coverage gaps
+- system/e2e workflow gaps
+- CVE and supply-chain risk
+- desktop UI, accessibility, and Tkinter state-flow checks
+
+These reviewer passes complement, but do not replace, the automated `unittest` suite and manual UI regression checks.
 
 ## Test Design Techniques
 
@@ -56,6 +78,7 @@ Run the automated suite when:
 - `merge_scaffold.py` changes
 - question-bank schema expectations change
 - documentation claims new behavior or coverage
+- third-party tooling, GitHub Actions workflows, or dependency manifests change
 
 ## Exit Criteria
 
@@ -66,11 +89,17 @@ python -m unittest -v
 python -m py_compile ISTQBQuizApp.py cli_quiz.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py ui_layout.py
 ```
 
+If Python dependency manifests are introduced or changed, also run:
+
+```powershell
+pip-audit --desc
+```
+
 Use `python3` instead of `python` if the local environment does not expose `python`.
 
 Expected current baseline:
 
-- 41 automated tests pass
+- 84 automated tests pass
 - compile check exits successfully
 
 ## Test Data
@@ -99,10 +128,16 @@ When a test fails or a defect is found, record:
 
 Known gaps:
 
-- no automated Tkinter smoke tests
-- no automated full interactive CLI loop tests
+- no automated timeout-triggered Tkinter result smoke test
+- no exhaustive automated CLI command-loop coverage for every command path
 - no topic or learning-objective metadata coverage until metadata exists
 - no weak-area study tests because that feature is not implemented
 - no export tests for history because history export is not implemented
+
+Current mitigations for those gaps include:
+
+- manual regression steps in the traceability matrix
+- screenshot- and desktop-command-assisted review through the Copilot review stack
+- specialist reviewer agents for docs, tests, workflow gaps, and CVE analysis
 
 These gaps are tracked in `REQUIREMENTS_TRACEABILITY_MATRIX.md` and `COPILOT_TASK_BACKLOG.md`.

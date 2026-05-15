@@ -8,7 +8,11 @@ import json
 import unittest
 from datetime import datetime
 from pathlib import Path
+from unittest import mock
 
+import tkinter as tk
+
+import ISTQBQuizApp
 import cli_quiz
 import exam_models
 import exam_storage
@@ -804,6 +808,227 @@ class UiLayoutTests(unittest.TestCase):
         wraps = ui_layout.compute_wrap_lengths(320, ui_layout.WIDE_LAYOUT)
         self.assertGreaterEqual(wraps["question"], 440)
         self.assertGreaterEqual(wraps["option"], 380)
+
+
+class DesktopUiHelperTests(unittest.TestCase):
+    """Tests for desktop-only answer-selection helpers."""
+
+    def test_radio_var_value_for_answer_uses_unselected_sentinel_for_none(self):
+        value = ISTQBQuizApp.radio_var_value_for_answer(None)
+
+        self.assertEqual(ISTQBQuizApp.UNSELECTED_RADIO_VALUE, value)
+
+    def test_answer_for_radio_var_value_round_trips_selected_and_unselected_values(self):
+        self.assertIsNone(
+            ISTQBQuizApp.answer_for_radio_var_value(ISTQBQuizApp.UNSELECTED_RADIO_VALUE)
+        )
+        self.assertEqual("Option B", ISTQBQuizApp.answer_for_radio_var_value("Option B"))
+
+
+class DesktopUiSmokeTests(unittest.TestCase):
+    """Smoke tests for core desktop UI workflows using a hidden Tk root."""
+
+    def setUp(self):
+        self.question_bank = [
+            {
+                "q": "Question 1",
+                "options": ["A", "B", "C", "D"],
+                "answer": "A",
+                "explanation": "Explanation 1",
+                "source": "Fixture",
+            },
+            {
+                "q": "Question 2",
+                "options": ["A", "B", "C", "D"],
+                "answer": "D",
+                "explanation": "Explanation 2",
+                "source": "Fixture",
+            },
+        ]
+        self.root = tk.Tk()
+        self.root.withdraw()
+        self._patches = [
+            mock.patch.object(
+                ISTQBQuizApp.ISTQBQuizApp,
+                "load_questions",
+                return_value=self._clone_questions(self.question_bank),
+            ),
+            mock.patch.object(ISTQBQuizApp.ISTQBQuizApp, "load_history", return_value=[]),
+            mock.patch.object(
+                ISTQBQuizApp.ISTQBQuizApp,
+                "build_exam_questions",
+                return_value=self._clone_questions(self.question_bank),
+            ),
+            mock.patch.object(ISTQBQuizApp.ISTQBQuizApp, "update_timer", return_value=None),
+        ]
+        for patcher in self._patches:
+            patcher.start()
+        self.app = ISTQBQuizApp.ISTQBQuizApp(self.root)
+
+    def tearDown(self):
+        for window in list(self.root.winfo_children()):
+            if isinstance(window, tk.Toplevel) and window.winfo_exists():
+                window.destroy()
+        if getattr(self, "root", None) is not None and self.root.winfo_exists():
+            self.root.destroy()
+        for patcher in reversed(getattr(self, "_patches", [])):
+            patcher.stop()
+
+    def _clone_questions(self, questions):
+        """Return exam-question copies so tests do not share mutable lists."""
+        return [{**question, "options": list(question["options"])} for question in questions]
+
+    def test_jump_to_question_persists_current_answer(self):
+        self.app.var.set("A")
+
+        self.app.jump_to_question(1)
+
+        self.assertEqual("A", self.app.session.user_answers[0])
+        self.assertEqual(1, self.app.session.current_q)
+
+    def test_show_history_window_populates_tree_newest_first(self):
+        self.app.history = [
+            {
+                "timestamp": "2026-05-10 08:00:00",
+                "score": 25,
+                "total": 40,
+                "percent": 62.5,
+                "result": "FAIL",
+            },
+            {
+                "timestamp": "2026-05-11 08:00:00",
+                "score": 32,
+                "total": 40,
+                "percent": 80.0,
+                "result": "PASS",
+            },
+        ]
+
+        self.app.show_history_window()
+
+        items = self.app.history_tree.get_children()
+        self.assertEqual(2, len(items))
+        first_row = self.app.history_tree.item(items[0], "values")
+        self.assertEqual("2026-05-11 08:00:00", first_row[0])
+
+    def test_show_results_disables_exam_controls_and_records_history(self):
+        self.app.var.set("A")
+        self.app.save_answer()
+        self.app.jump_to_question(1)
+        self.app.var.set("D")
+
+        self.app.show_results()
+
+        self.assertTrue(self.app.exam_submitted)
+        self.assertEqual(1, len(self.app.history))
+        self.assertEqual(tk.DISABLED, self.app.submit_btn["state"])
+        self.assertEqual("PASS", self.app.history[0]["result"])
+
+    def test_restart_test_resets_unselected_state_and_controls(self):
+        result_window = tk.Toplevel(self.root)
+        self.app.var.set("A")
+        self.app.session.save_answer("A")
+        self.app.exam_submitted = True
+        self.app.set_exam_controls_state(tk.DISABLED)
+
+        self.app.restart_test(result_window)
+
+        self.assertFalse(self.app.exam_submitted)
+        self.assertEqual(ISTQBQuizApp.UNSELECTED_RADIO_VALUE, self.app.var.get())
+        self.assertEqual([None, None], self.app.session.user_answers)
+        self.assertEqual(tk.NORMAL, self.app.submit_btn["state"])
+
+
+class CliSessionFlowTests(unittest.TestCase):
+    """End-to-end style tests for the interactive CLI command loop."""
+
+    def setUp(self):
+        self.question_bank = [
+            {
+                "q": "Question 1",
+                "options": ["A", "B", "C", "D"],
+                "answer": "A",
+                "explanation": "Explanation 1",
+                "source": "Fixture",
+            },
+            {
+                "q": "Question 2",
+                "options": ["A", "B", "C", "D"],
+                "answer": "D",
+                "explanation": "Explanation 2",
+                "source": "Fixture",
+            },
+        ]
+        self._patches = [
+            mock.patch.object(cli_quiz, "load_questions", return_value=self._clone_questions(self.question_bank)),
+            mock.patch.object(cli_quiz, "load_history", return_value=[]),
+            mock.patch.object(
+                cli_quiz,
+                "build_exam_questions",
+                side_effect=lambda _question_bank, _count: self._clone_questions(self.question_bank),
+            ),
+            mock.patch.object(cli_quiz, "save_history"),
+            mock.patch.object(cli_quiz.time, "monotonic", return_value=1000.0),
+        ]
+        for patcher in self._patches:
+            patcher.start()
+        self.app = cli_quiz.ISTQBQuizCLI()
+        self.app.clear_screen = mock.Mock()
+        self.app.pause = mock.Mock()
+
+    def tearDown(self):
+        for patcher in reversed(getattr(self, "_patches", [])):
+            patcher.stop()
+
+    def _clone_questions(self, questions):
+        """Return per-test copies of the question fixtures."""
+        return [{**question, "options": list(question["options"])} for question in questions]
+
+    def test_submit_command_completes_exam_and_persists_history(self):
+        self.app.handle_active_command("a")
+        self.app.handle_active_command("next")
+        self.app.handle_active_command("d")
+
+        with mock.patch.object(self.app, "prompt", return_value="y"):
+            handled = self.app.handle_active_command("submit")
+
+        self.assertTrue(handled)
+        self.assertTrue(self.app.exam_submitted)
+        self.assertEqual(1, len(self.app.history))
+        self.assertEqual("PASS", self.app.history[0]["result"])
+
+    def test_run_executes_active_and_post_submit_workflow(self):
+        self.app.render = mock.Mock()
+        self.app.show_review = mock.Mock()
+        prompt_values = iter(
+            [
+                "a",
+                "next",
+                "d",
+                "submit",
+                "y",
+                "review",
+                "restart",
+                "quit",
+                "y",
+            ]
+        )
+        self.app.prompt = mock.Mock(side_effect=lambda _message: next(prompt_values))
+
+        with self.assertRaises(SystemExit):
+            self.app.run()
+
+        self.app.show_review.assert_called_once()
+        self.assertFalse(self.app.exam_submitted)
+        self.assertEqual(1, len(self.app.history))
+
+    def test_main_returns_error_code_when_cli_cannot_load_data(self):
+        with mock.patch.object(cli_quiz, "ISTQBQuizCLI", side_effect=ValueError("broken data")):
+            with mock.patch("builtins.print") as print_mock:
+                result = cli_quiz.main()
+
+        self.assertEqual(1, result)
+        print_mock.assert_any_call("Unable to load quiz data: broken data")
 
 
 class MergeScaffoldTests(unittest.TestCase):

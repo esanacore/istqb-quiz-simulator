@@ -28,7 +28,7 @@ Automated test IDs are `unittest` method names from `test_istqb_quiz_app.py`.
 | FR-009 | Automated | `test_build_exam_questions_returns_shuffled_copies` |
 | FR-010 | Automated | `test_navigation_and_answer_saving`, `test_toggle_mark_and_jump` |
 | FR-011 | Automated | `test_navigation_does_not_move_beyond_bounds` |
-| FR-012 | Automated | `test_navigation_and_answer_saving` |
+| FR-012 | Automated | `test_navigation_and_answer_saving`, `test_radio_var_value_for_answer_uses_unselected_sentinel_for_none`, `test_answer_for_radio_var_value_round_trips_selected_and_unselected_values` |
 | FR-013 | Automated | `test_clear_answer_updates_counts` |
 | FR-014 | Automated | `test_clear_answer_updates_counts`, `test_toggle_mark_and_jump` |
 | FR-015 | Automated | `test_toggle_mark_and_jump` |
@@ -39,18 +39,18 @@ Automated test IDs are `unittest` method names from `test_istqb_quiz_app.py`.
 | FR-020 | Automated | `test_submit_builds_result_and_locks_session`, `test_empty_session_result_is_zero_percent_fail` |
 | FR-021 | Automated | `test_submit_uses_configured_passing_threshold` |
 | FR-022 | Automated | `test_submit_builds_result_and_locks_session`, `test_build_review_text_renders_one_question` |
-| FR-023 | Partial | Desktop behavior implemented in `show_results`; needs UI smoke/manual timeout confirmation. |
+| FR-023 | Partial | Manual submission path covered by `test_show_results_disables_exam_controls_and_records_history`; timeout path still needs manual confirmation. |
 | FR-024 | Partial | Domain jump covered by `test_toggle_mark_and_jump`; Tkinter map rendering remains manual. |
-| FR-025 | Manual | Desktop history window should be smoke-tested manually until UI automation exists. |
+| FR-025 | Automated | `test_show_history_window_populates_tree_newest_first` |
 | FR-026 | Automated | `test_history_entries_newest_first_preserves_original_indexes` |
 | FR-027 | Manual | Delete behavior depends on Tkinter selection; original-index helper is automated. |
 | FR-028 | Manual | Confirmation/UI behavior requires manual or future UI smoke coverage. |
 | FR-029 | Automated | `test_parse_answer_token_supports_letters_and_numbers` |
-| FR-030 | Partial | Helper parsing and domain effects covered; full interactive loop remains manual. |
+| FR-030 | Partial | Helper parsing plus submit/restart/review loop behavior covered by `test_submit_command_completes_exam_and_persists_history` and `test_run_executes_active_and_post_submit_workflow`; some command paths remain manual. |
 | FR-031 | Automated | `test_history_entries_newest_first_preserves_original_indexes` |
 | FR-032 | Manual | CLI command path should be exercised manually; persistence helper is covered. |
 | FR-033 | Automated | `test_build_review_text_renders_one_question` |
-| FR-034 | Manual | CLI startup error path should be smoke-tested manually with malformed data. |
+| FR-034 | Automated | `test_main_returns_error_code_when_cli_cannot_load_data` |
 | FR-035 | Automated | `test_build_history_entry_normalizes_exam_result`, `test_build_exam_answer_and_persist_history_flow` |
 | FR-036 | Automated | `test_load_history_defaults_to_empty_list_when_file_missing` |
 | FR-037 | Automated | `test_load_history_rejects_non_list_history` |
@@ -81,11 +81,15 @@ Automated test IDs are `unittest` method names from `test_istqb_quiz_app.py`.
 | QR-001 | Automated/Review | Domain/storage/helper tests exercise UI-independent logic. |
 | QR-002 | Manual | Run `python ISTQBQuizApp.py` and `python cli_quiz.py`; no third-party dependencies are declared. |
 | QR-003 | Review | `question_bank.json` contains `source`; provenance rules are documented in `AGENTS.md` and `CONTRIBUTING.md`. |
-| QR-004 | Automated | `python -m unittest -v` covers 41 fast tests. |
+| QR-004 | Automated | `python -m unittest -v` covers 84 fast tests. |
 | QR-005 | Automated | `python -m unittest -v` and `python -m py_compile ...`. |
 | QR-006 | Review | README, architecture, testing, requirements, and backlog docs updated with behavior changes. |
 | QR-007 | Review | `AGENTS.md`, `.github/copilot-instructions.md`, and backlog guidance. |
 | QR-008 | Review | `.gitignore` excludes `exam_history.json`, `.testdata/`, `__pycache__/`, and `.idea/`. |
+| QR-009 | Review | `.github/agents/` includes specialist reviewer agents for UI, docs, tests, provenance, and security workflows. |
+| QR-010 | Review | `.github/skills/` includes reusable review skills aligned with the repository workflow. |
+| QR-011 | Review | `.github/workflows/copilot-setup-steps.yml` provisions Python, Node.js, Tkinter, virtual-display, screenshot, and audit tooling. |
+| QR-012 | Review | `.github/dependabot.yml` monitors GitHub Actions dependencies weekly. |
 
 ## Planned Requirement Gaps
 
@@ -105,9 +109,10 @@ Run these checks before a release or after UI changes:
 
 1. Start the desktop app with `python ISTQBQuizApp.py`.
 2. Answer a question, navigate next/back, and confirm the answer persists.
-3. Mark and unmark a question in the desktop UI.
-4. Open history, verify newest-first ordering, delete one entry, and clear all entries with confirmation.
-5. Submit an exam and inspect the result window.
-6. Start the CLI with `python cli_quiz.py`.
-7. Use CLI answer, navigation, mark, summary, history, review, restart, and clear-history commands.
-8. Temporarily point to malformed test data in a controlled environment and verify startup errors are clear.
+3. Clear an answer in the desktop UI and confirm the radio group returns to an unselected state.
+4. Mark and unmark a question in the desktop UI.
+5. Open history, verify newest-first ordering, delete one entry, and clear all entries with confirmation.
+6. Submit an exam and inspect the result window.
+7. Start the CLI with `python cli_quiz.py`.
+8. Use CLI answer, navigation, mark, summary, history, review, restart, and clear-history commands.
+9. Temporarily point to malformed test data in a controlled environment and verify startup errors are clear.

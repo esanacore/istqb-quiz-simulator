@@ -39,6 +39,17 @@ NAV_CURRENT = "#1f5f5b"
 NAV_ANSWERED = "#d7ebe6"
 NAV_MARKED = "#f6d365"
 NAV_EMPTY = "#e5e7eb"
+UNSELECTED_RADIO_VALUE = "__UNSELECTED_RADIO__"
+
+
+def radio_var_value_for_answer(answer):
+    """Return the Tkinter radio value for a stored answer."""
+    return answer if answer is not None else UNSELECTED_RADIO_VALUE
+
+
+def answer_for_radio_var_value(selected_value):
+    """Convert a Tkinter radio value back into a stored session answer."""
+    return None if selected_value == UNSELECTED_RADIO_VALUE else selected_value
 
 
 class ISTQBQuizApp:
@@ -232,7 +243,7 @@ class ISTQBQuizApp:
         )
         self.q_label.pack(fill="x", padx=24, pady=(0, 18))
 
-        self.var = tk.StringVar(value="_UNSELECTED_")
+        self.var = tk.StringVar(value=radio_var_value_for_answer(None))
         self.option_buttons = []
         self.options_frame = tk.Frame(self.question_card, bg=PANEL_COLOR)
         self.options_frame.pack(fill="both", expand=True, padx=18, pady=(0, 12))
@@ -674,7 +685,7 @@ class ISTQBQuizApp:
             self.option_buttons[index].config(text=option, value=option)
 
         current_answer = self.session.user_answers[self.session.current_q]
-        self.var.set(current_answer if current_answer else "")
+        self.var.set(radio_var_value_for_answer(current_answer))
 
         if self.session.marked_for_review[self.session.current_q]:
             card_bg = REVIEW_BG
@@ -714,7 +725,7 @@ class ISTQBQuizApp:
 
     def save_answer(self):
         """Write the current radio-button selection into the session."""
-        self.session.save_answer(self.var.get())
+        self.session.save_answer(answer_for_radio_var_value(self.var.get()))
 
     def toggle_mark(self):
         """Toggle the mark-for-review flag on the current question."""
@@ -865,7 +876,7 @@ class ISTQBQuizApp:
         self.session.restart(self.questions)
         self.timer_running = True
         self.exam_submitted = False
-        self.var.set("")
+        self.var.set(radio_var_value_for_answer(None))
         self.bank_label.config(
             text=f"Bank: {len(self.question_bank)} Questions | Exam: {len(self.questions)} Randomized"
         )

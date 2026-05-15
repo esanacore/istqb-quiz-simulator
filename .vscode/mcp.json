@@ -1,0 +1,22 @@
+{
+  "servers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp"
+    },
+    "desktop-commander": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@wonderwhy-er/desktop-commander@latest"
+      ]
+    },
+    "desktop-screenshot": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "universal-screenshot-mcp"
+      ]
+    }
+  }
+}

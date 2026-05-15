@@ -22,7 +22,7 @@ This release establishes the first complete baseline for the project as both:
 
 - UI/domain/storage responsibilities split into separate modules
 - Google-style docstrings added across Python modules
-- 41 automated tests for domain, storage, CLI helper, merge-toolkit, layout, and integration-style exam flow logic
+- 84 automated tests for domain, storage, CLI helper, command-loop, desktop smoke, merge-toolkit, layout, and integration-style exam flow logic
 - `.gitignore` added for local/runtime artifacts
 
 ## Documentation Additions

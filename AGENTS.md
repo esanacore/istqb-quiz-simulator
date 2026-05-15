@@ -58,6 +58,8 @@ Supporting docs worth keeping aligned:
 - Preserve answer correctness when shuffling options.
 - Avoid introducing dependencies unless there is a strong justification.
 - Keep the app runnable with a simple `python ISTQBQuizApp.py`.
+- Use the `automagic` agent or `/automagic` prompt as the default workflow for meaningful changes.
+- Do not treat README, testing docs, or traceability updates as optional when the change affects workflows, automation, or user-visible behavior.
 
 Preferred change order:
 
@@ -83,6 +85,8 @@ Before finishing meaningful code changes, run:
 python -m unittest -v
 python -m py_compile ISTQBQuizApp.py cli_quiz.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py ui_layout.py
 ```
+
+Also ensure the relevant specialist reviewers from the Copilot review stack have been used and their required doc/test updates addressed.
 
 ## Preferred Improvement Priorities
 

@@ -42,7 +42,7 @@ The product is a study simulator. It is not an official ISTQB exam product.
 | FR-009 | The system shall shuffle answer option order without changing the canonical correct answer text. | Must | Implemented |
 | FR-010 | The system shall manage current-question navigation independent of the UI layer. | Must | Implemented |
 | FR-011 | The system shall prevent navigation before the first question or after the last question. | Must | Implemented |
-| FR-012 | The system shall persist one selected answer per question during an attempt. | Must | Implemented |
+| FR-012 | The system shall persist one selected answer per question during an attempt, including a distinct no-selection state in the desktop UI. | Must | Implemented |
 | FR-013 | The system shall allow clearing a selected answer. | Should | Implemented |
 | FR-014 | The system shall track answered, unanswered, and marked-for-review counts. | Must | Implemented |
 | FR-015 | The system shall allow toggling mark-for-review per question. | Should | Implemented |
@@ -100,6 +100,10 @@ The product is a study simulator. It is not an official ISTQB exam product.
 | QR-006 | Documentation shall be kept aligned with architecture and workflow changes. | Must | Implemented |
 | QR-007 | Repository guidance shall instruct future agents to preserve question provenance and answer correctness. | Must | Implemented |
 | QR-008 | Runtime-generated state and local IDE files shall be excluded from source control. | Should | Implemented |
+| QR-009 | The repository shall provide specialist Copilot reviewer agents for UI, documentation, testing, provenance, and security review workflows. | Should | Implemented |
+| QR-010 | The repository shall provide reusable review skills aligned with the project architecture and quality workflow. | Should | Implemented |
+| QR-011 | The cloud-agent setup shall provision Python, Node.js, Tkinter, virtual-display, screenshot, and Python audit tooling for review sessions. | Should | Implemented |
+| QR-012 | The repository shall provide automated GitHub Actions dependency monitoring through Dependabot. | Should | Implemented |
 
 ## Current Planned Requirements
 

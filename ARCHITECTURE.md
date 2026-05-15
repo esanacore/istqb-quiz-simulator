@@ -2,7 +2,7 @@
 
 ## Overview
 
-The application is intentionally split into **three layers**:
+The application is intentionally split into **three runtime layers** plus supporting review/tooling layers:
 
 1. **Presentation / orchestration**
 2. **Domain model**
@@ -93,6 +93,27 @@ Responsibilities:
 - provide a reusable merge scaffold for future projects
 - document the config-driven merge CLI workflow
 - make dataset integration repeatable instead of ad hoc
+
+### 5. Copilot Review Stack
+
+Files:
+
+- [.github/agents](.github/agents)
+- [.github/skills](.github/skills)
+- [.vscode/mcp.json](.vscode/mcp.json)
+- [.github/workflows/copilot-setup-steps.yml](.github/workflows/copilot-setup-steps.yml)
+- [.github/dependabot.yml](.github/dependabot.yml)
+- [COPILOT_REVIEW_STACK.md](COPILOT_REVIEW_STACK.md)
+
+Responsibilities:
+
+- provide specialist review personas for UI, accessibility, state-flow, documentation, testing, provenance, and CVE analysis
+- provide reusable review skills aligned with the repository workflow
+- configure workspace MCP tooling for GitHub context, desktop commands, and screenshots
+- provision the cloud-agent environment for consistent review sessions
+- provide automated GitHub Actions dependency update signals
+
+This layer is a development-time quality system, not a runtime dependency of the simulator itself.
 
 ## Data Files
 

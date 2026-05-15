@@ -39,6 +39,30 @@ Preferred sequence for meaningful improvements:
 5. update documentation
 6. polish UI or developer experience
 
+## Required Review Workflow
+
+For any meaningful repository change, do not rely on memory for the review sequence.
+
+Use the repository change gate:
+
+- default custom agent: `automagic`
+- equivalent prompt file: `/automagic`
+
+Treat the following as mandatory for meaningful changes unless the scope is clearly irrelevant:
+
+1. documentation sync review
+2. unit/integration test review
+3. requirements/traceability review
+
+Also include specialist reviewers when relevant:
+
+- desktop UI changes: visual, accessibility, and Tkinter state reviewers
+- workflow changes: system/e2e reviewer
+- dependency, workflow, or tooling changes: CVE reviewer
+- question-bank or merge changes: provenance reviewer
+
+Do not finish a meaningful change without ensuring the relevant docs, tests, and traceability artifacts have been reviewed and updated.
+
 ## Testing Guidance
 
 When generating tests:
@@ -57,6 +81,7 @@ When generating tests:
 - Keep comments concise and useful.
 - Keep architecture, testing, and contribution docs aligned with the current code layout.
 - Keep requirements testable and mapped to automated/manual verification.
+- Update `README.md` when a change affects project structure, workflows, automation, or contributor experience.
 
 ## Content Guidance
 

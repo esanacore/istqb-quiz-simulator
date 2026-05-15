@@ -50,6 +50,7 @@ practiceISTQB/
 ├── MERGE_CHECKLIST.md
 ├── DATASET_SCHEMA_TEMPLATE.md
 ├── MERGE_CLI_GUIDE.md
+├── COPILOT_REVIEW_STACK.md
 ├── ISTQBQuizApp.py
 ├── cli_quiz.py
 ├── exam_models.py
@@ -61,9 +62,14 @@ practiceISTQB/
 ├── exam_history.json        # created at runtime
 ├── test_istqb_quiz_app.py
 ├── istqb_ctfl_practice_exam_links.rtf
+├── .vscode/
+│   └── mcp.json
 └── .github/
+    ├── agents/
     ├── copilot-instructions.md
+    ├── dependabot.yml
     ├── ISSUE_TEMPLATE/
+    ├── skills/
     └── workflows/
 ```
 
@@ -194,10 +200,21 @@ The repository includes a GitHub Actions workflow for:
 - Python compile checks
 - unit test execution on pushes and pull requests
 
+It also includes automated GitHub Actions dependency monitoring via `.github/dependabot.yml`.
+
 It also includes issue templates for:
 
 - bug reports
 - feature requests
+
+It also includes a repo-scoped Copilot review stack for desktop UI, docs, testing, and security review:
+
+- workspace MCP configuration in [.vscode/mcp.json](.vscode/mcp.json)
+- specialist reviewer agents in [.github/agents](.github/agents)
+- reusable review skills in [.github/skills](.github/skills)
+- cloud-agent setup in [.github/workflows/copilot-setup-steps.yml](.github/workflows/copilot-setup-steps.yml)
+
+See [COPILOT_REVIEW_STACK.md](COPILOT_REVIEW_STACK.md) for setup and usage.
 
 ## 📚 Question Sources
 

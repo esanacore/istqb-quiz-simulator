@@ -67,6 +67,24 @@ python -m unittest -v
 python -m py_compile ISTQBQuizApp.py cli_quiz.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py ui_layout.py
 ```
 
+## Copilot Review Workflow
+
+For meaningful repository changes, use the repo-scoped review workflow by default:
+
+1. start with the `automagic` agent or `/automagic` prompt
+2. let it pull in the required specialist reviewers
+3. address the required docs/tests/traceability updates before considering the change complete
+
+For UI-heavy or behavior-sensitive changes, the gate should additionally use:
+
+- enable the workspace MCP servers in `.vscode/mcp.json`
+- use the specialist reviewer agents in `.github/agents/`
+- use the reusable skills in `.github/skills/`
+- include the docs, test, and CVE reviewers when the change affects those surfaces
+- keep `.github/dependabot.yml` aligned with the third-party ecosystems the repo actually uses
+
+See [COPILOT_REVIEW_STACK.md](COPILOT_REVIEW_STACK.md) for the recommended workflow.
+
 ## Suggested Contribution Areas
 
 - expand question metadata with topic and learning objective fields
@@ -84,3 +102,4 @@ If this repo is moved into a normal Git workflow, a good change should include:
 - a short implementation summary
 - notes on tests run
 - screenshots for meaningful UI changes
+- confirmation that the repository change gate workflow was run

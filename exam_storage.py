@@ -6,6 +6,7 @@ Date: 2026-05-10
 
 import json
 import random
+from csv import DictWriter
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
@@ -102,6 +103,37 @@ def save_history(history, history_path=HISTORY_PATH):
     """
     with Path(history_path).open("w", encoding="utf-8") as handle:
         json.dump(history, handle, indent=2)
+
+
+def export_history(history, export_path, export_format=None):
+    """Export history records to JSON or CSV.
+
+    Args:
+        history: List of normalized attempt-history dictionaries.
+        export_path: Destination file path.
+        export_format: Optional explicit format ("json" or "csv").
+
+    Raises:
+        ValueError: If the requested format is unsupported.
+    """
+    destination = Path(export_path)
+    selected_format = (export_format or destination.suffix.lstrip(".")).lower()
+    if selected_format not in {"json", "csv"}:
+        raise ValueError("History export format must be either 'json' or 'csv'.")
+
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if selected_format == "json":
+        with destination.open("w", encoding="utf-8") as handle:
+            json.dump(history, handle, indent=2)
+        return destination
+
+    fieldnames = ("timestamp", "score", "total", "percent", "result")
+    with destination.open("w", encoding="utf-8", newline="") as handle:
+        writer = DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        for entry in history:
+            writer.writerow({field: entry.get(field, "") for field in fieldnames})
+    return destination
 
 
 def build_history_entry(result, timestamp=None):

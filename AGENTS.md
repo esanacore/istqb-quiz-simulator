@@ -13,6 +13,26 @@ Agents working in this repo should optimize for:
 
 This repository also contains a reusable **project-improvement and dataset-integration toolkit**. Agents may improve that toolkit, but should avoid letting toolkit work destabilize the simulator itself.
 
+## Engineering Constitution
+
+This repository follows the Engineering Constitution through the `constitution/` submodule.
+
+Before making changes, read:
+
+- `constitution/CONSTITUTION.md`
+- `constitution/AI_WORKFLOW.md`
+- `constitution/TESTING.md`
+- `constitution/DOCUMENTATION.md`
+- `constitution/SECURITY.md`
+- `constitution/ARCHITECTURE.md`
+- `constitution/RELEASES.md`
+- `constitution/TODO_GUIDELINES.md`
+- `README.md`
+- `TODO.md`
+- `CHANGELOG.md`
+
+Apply the constitution in the context of this repository's existing domain rules. The project-specific guidance below remains authoritative for ISTQB simulator architecture, question provenance, verification commands, and documentation alignment.
+
 ## Architecture
 
 - `ISTQBQuizApp.py`
@@ -41,6 +61,9 @@ Supporting docs worth keeping aligned:
 - `SOFTWARE_REQUIREMENTS.md`
 - `REQUIREMENTS_TRACEABILITY_MATRIX.md`
 - `CONTRIBUTING.md`
+- `TODO.md`
+- `CHANGELOG.md`
+- `docs/adr/`
 - `COPILOT_TASK_BACKLOG.md`
 - `PROJECT_EVOLUTION_FRAMEWORK.md`
 - `DATASET_INTEGRATION_PLAYBOOK.md`
@@ -52,6 +75,9 @@ Supporting docs worth keeping aligned:
 - Prefer changes that keep domain logic out of Tkinter callbacks.
 - Add or update unit tests when changing behavior in `exam_models.py` or `exam_storage.py`.
 - Update the requirements traceability matrix when adding, removing, or materially changing requirements or tests.
+- Update `TODO.md` when discovering or completing roadmap work.
+- Update `CHANGELOG.md` for user-facing changes.
+- Add ADRs under `docs/adr/` for major framework, architecture, data, or security decisions.
 - Keep requirements testable and assign stable requirement IDs for new behavior.
 - If changing merge behavior, keep `merge_scaffold.py`, `MERGE_CLI_GUIDE.md`, and the dataset toolkit docs consistent.
 - Treat question provenance as important. New questions should be source-backed and traceable.
@@ -76,6 +102,7 @@ Preferred change order:
 - Use Google-style Python docstrings for modules, classes, and non-trivial functions.
 - Keep comments high signal. Do not add line-by-line narration comments.
 - When architecture or workflow changes, update the related markdown docs in the same change.
+- Keep constitution-facing files aligned with existing SQA docs rather than duplicating conflicting guidance.
 
 ## Verification
 

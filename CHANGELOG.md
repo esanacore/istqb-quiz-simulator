@@ -10,6 +10,7 @@ This project follows semantic versioning.
 
 - Added Engineering Constitution integration through the `constitution/` submodule.
 - Added repository-level `TODO.md`, `CHANGELOG.md`, `CLAUDE.md`, `COPILOT_INSTRUCTIONS.md`, and `docs/adr/`.
+- Added exam-history export to JSON/CSV in both desktop history dialog and CLI commands.
 
 ### Changed
 

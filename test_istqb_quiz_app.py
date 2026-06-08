@@ -6,6 +6,7 @@ Date: 2026-05-10
 
 import json
 import unittest
+from csv import DictReader
 from datetime import datetime
 from pathlib import Path
 from unittest import mock
@@ -371,6 +372,50 @@ class ExamStorageTests(unittest.TestCase):
 
         for question in exam:
             self.assertIn(question["answer"], question["options"])
+
+    def test_export_history_writes_json_payload(self):
+        export_path = TEST_DATA_DIR / "exported_history.json"
+        history = [
+            {
+                "timestamp": "2026-05-10 01:00:00",
+                "score": 33,
+                "total": 40,
+                "percent": 82.5,
+                "result": "PASS",
+            }
+        ]
+
+        exam_storage.export_history(history, export_path, export_format="json")
+
+        exported = json.loads(export_path.read_text(encoding="utf-8"))
+        self.assertEqual(history, exported)
+
+    def test_export_history_writes_csv_payload(self):
+        export_path = TEST_DATA_DIR / "exported_history.csv"
+        history = [
+            {
+                "timestamp": "2026-05-11 01:00:00",
+                "score": 28,
+                "total": 40,
+                "percent": 70.0,
+                "result": "PASS",
+            }
+        ]
+
+        exam_storage.export_history(history, export_path, export_format="csv")
+
+        with export_path.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(DictReader(handle))
+        self.assertEqual(1, len(rows))
+        self.assertEqual("2026-05-11 01:00:00", rows[0]["timestamp"])
+        self.assertEqual("28", rows[0]["score"])
+        self.assertEqual("40", rows[0]["total"])
+        self.assertEqual("70.0", rows[0]["percent"])
+        self.assertEqual("PASS", rows[0]["result"])
+
+    def test_export_history_rejects_unknown_format(self):
+        with self.assertRaisesRegex(ValueError, "either 'json' or 'csv'"):
+            exam_storage.export_history([], TEST_DATA_DIR / "history.txt", export_format="txt")
 
 
 class ExamSessionTests(unittest.TestCase):
@@ -996,6 +1041,48 @@ class CliSessionFlowTests(unittest.TestCase):
         self.assertTrue(self.app.exam_submitted)
         self.assertEqual(1, len(self.app.history))
         self.assertEqual("PASS", self.app.history[0]["result"])
+
+    def test_export_json_command_uses_export_helper(self):
+        self.app.history = [
+            {
+                "timestamp": "2026-05-12 10:00:00",
+                "score": 30,
+                "total": 40,
+                "percent": 75.0,
+                "result": "PASS",
+            }
+        ]
+        self.app.prompt = mock.Mock(return_value="")
+        with mock.patch.object(cli_quiz, "export_history_records") as export_mock:
+            handled = self.app.handle_active_command("export-json")
+
+        self.assertTrue(handled)
+        export_mock.assert_called_once_with(
+            self.app.history,
+            "exam_history_export.json",
+            export_format="json",
+        )
+
+    def test_export_csv_command_available_after_submit(self):
+        self.app.history = [
+            {
+                "timestamp": "2026-05-12 10:00:00",
+                "score": 30,
+                "total": 40,
+                "percent": 75.0,
+                "result": "PASS",
+            }
+        ]
+        self.app.prompt = mock.Mock(return_value="custom.csv")
+        with mock.patch.object(cli_quiz, "export_history_records") as export_mock:
+            handled = self.app.handle_post_submit_command("export-csv")
+
+        self.assertTrue(handled)
+        export_mock.assert_called_once_with(
+            self.app.history,
+            "custom.csv",
+            export_format="csv",
+        )
 
     def test_run_executes_active_and_post_submit_workflow(self):
         self.app.render = mock.Mock()

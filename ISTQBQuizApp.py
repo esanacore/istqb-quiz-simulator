@@ -10,7 +10,7 @@ live in ``exam_storage.py``.
 
 from json import JSONDecodeError
 import tkinter as tk
-from tkinter import messagebox, scrolledtext, ttk
+from tkinter import filedialog, messagebox, scrolledtext, ttk
 
 from exam_models import ExamSession
 from exam_storage import (
@@ -19,6 +19,7 @@ from exam_storage import (
     QUESTION_BANK_PATH,
     build_history_entry,
     build_exam_questions,
+    export_history as export_history_records,
     history_entries_newest_first,
     load_history,
     load_questions,
@@ -573,6 +574,36 @@ class ISTQBQuizApp:
         self.refresh_history_summary()
         self.refresh_history_tree()
 
+    def export_history(self, export_format):
+        """Export persisted history as JSON or CSV."""
+        if not self.history:
+            messagebox.showinfo("Export History", "There are no history entries to export.")
+            return
+
+        normalized_format = export_format.lower()
+        extension = ".json" if normalized_format == "json" else ".csv"
+        filetypes = (
+            [("JSON Files", "*.json"), ("All Files", "*.*")]
+            if normalized_format == "json"
+            else [("CSV Files", "*.csv"), ("All Files", "*.*")]
+        )
+        export_path = filedialog.asksaveasfilename(
+            title=f"Export History ({normalized_format.upper()})",
+            defaultextension=extension,
+            filetypes=filetypes,
+            initialfile=f"exam_history_export{extension}",
+        )
+        if not export_path:
+            return
+
+        try:
+            export_history_records(self.history, export_path, export_format=normalized_format)
+        except (OSError, ValueError) as exc:
+            messagebox.showerror("Export History", f"Unable to export history.\n\n{exc}")
+            return
+
+        messagebox.showinfo("Export History", f"History exported to:\n{export_path}")
+
     def refresh_history_tree(self):
         """Reload the history table with the current in-memory records."""
         if self.history_tree is None:
@@ -660,6 +691,24 @@ class ISTQBQuizApp:
             fg=TEXT_COLOR,
             width=12,
             activebackground="#e8c2c2",
+        ).pack(side="left", padx=(10, 0))
+        self._build_action_button(
+            button_frame,
+            "Export JSON",
+            lambda: self.export_history("json"),
+            bg=ACCENT_SOFT,
+            fg=TEXT_COLOR,
+            width=12,
+            activebackground="#c3e0d9",
+        ).pack(side="left", padx=(10, 0))
+        self._build_action_button(
+            button_frame,
+            "Export CSV",
+            lambda: self.export_history("csv"),
+            bg=ACCENT_SOFT,
+            fg=TEXT_COLOR,
+            width=12,
+            activebackground="#c3e0d9",
         ).pack(side="left", padx=(10, 0))
         self._build_action_button(
             button_frame,

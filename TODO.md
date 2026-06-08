@@ -11,7 +11,7 @@ It consolidates the existing Copilot backlog into the Engineering Constitution T
 - [ ] Add source-aware and topic-aware filtering in result review.
 - [ ] Add weak-area study mode based on missed topics.
 - [ ] Add an exam settings dialog for exam size and duration while preserving defaults of 40 questions and 60 minutes.
-- [ ] Add export of exam history to JSON or CSV.
+- [x] Add export of exam history to JSON or CSV.
 
 ## Technical Debt
 

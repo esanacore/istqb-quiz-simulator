@@ -16,6 +16,7 @@ from exam_storage import (
     QUESTION_BANK_PATH,
     build_history_entry,
     build_exam_questions,
+    export_history as export_history_records,
     history_entries_newest_first,
     load_history,
     load_questions,
@@ -235,7 +236,7 @@ class ISTQBQuizCLI:
         print(
             "Commands: "
             "A-D/1-4 answer | next | prev | jump <n> | mark | clear | summary | "
-            "history | submit | restart | help | quit"
+            "history | export-json | export-csv | submit | restart | help | quit"
         )
 
     def render_completed_state(self):
@@ -258,7 +259,7 @@ class ISTQBQuizCLI:
             )
             print()
             print("Use `review` for the full explanation report.")
-        print("Commands: review | history | restart | help | quit")
+        print("Commands: review | history | export-json | export-csv | restart | help | quit")
 
     def show_help(self):
         """Display the CLI command reference."""
@@ -271,6 +272,8 @@ class ISTQBQuizCLI:
         print("clear: clear the current answer")
         print("summary: show answered, marked, and unanswered counts")
         print("history: show stored exam history")
+        print("export-json: export stored history to JSON")
+        print("export-csv: export stored history to CSV")
         print("clear-history: delete all stored exam history")
         print("submit: finish the exam and score it")
         print("restart: start a fresh randomized exam")
@@ -311,6 +314,33 @@ class ISTQBQuizCLI:
         if command in {"y", "yes"}:
             self.history.clear()
             save_history(self.history, HISTORY_PATH)
+
+    def export_history(self, export_format):
+        """Export history entries to the selected file format."""
+        self.clear_screen()
+        if not self.history:
+            print("No stored attempts to export.")
+            print()
+            self.pause()
+            return
+
+        normalized_format = export_format.lower()
+        default_name = f"exam_history_export.{normalized_format}"
+        raw_path = self.prompt(
+            f"Output path for {normalized_format.upper()} export [{default_name}]: "
+        )
+        destination = raw_path or default_name
+        try:
+            export_history_records(self.history, destination, export_format=normalized_format)
+        except (OSError, ValueError) as exc:
+            print(f"Unable to export history: {exc}")
+            print()
+            self.pause()
+            return
+
+        print(f"History exported to: {destination}")
+        print()
+        self.pause()
 
     def show_summary(self):
         """Display attempt status details."""
@@ -418,7 +448,7 @@ class ISTQBQuizCLI:
             )
         )
         print()
-        print("Commands: review | history | restart | quit")
+        print("Commands: review | history | export-json | export-csv | restart | quit")
         print()
         self.pause()
 
@@ -471,6 +501,12 @@ class ISTQBQuizCLI:
         if command == "history":
             self.show_history()
             return True
+        if command == "export-json":
+            self.export_history("json")
+            return True
+        if command == "export-csv":
+            self.export_history("csv")
+            return True
         if command == "clear-history":
             self.clear_history()
             return True
@@ -499,6 +535,12 @@ class ISTQBQuizCLI:
             return True
         if command == "history":
             self.show_history()
+            return True
+        if command == "export-json":
+            self.export_history("json")
+            return True
+        if command == "export-csv":
+            self.export_history("csv")
             return True
         if command == "clear-history":
             self.clear_history()

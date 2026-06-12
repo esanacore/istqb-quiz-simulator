@@ -5,7 +5,7 @@ A desktop exam simulator for **ISTQB Certified Tester Foundation Level (CTFL v4.
 It is designed to feel closer to a real exam session than a simple flashcard app: timed attempts, randomized 40-question exams, answer shuffling, mark-for-review workflow, attempt history, and detailed post-exam explanations sourced from official sample materials.
 
 <!-- CONSTITUTION_START -->
-[![Eric's Engineering Constitution](https://img.shields.io/badge/Eric's%20Engineering%20Constitution-Adopted-blue)](constitution/CONSTITUTION.md)
+[![Eric's Engineering Constitution](https://img.shields.io/badge/Eric's%20Engineering%20Constitution-Adopted-blue)](https://github.com/esanacore/engineering-constitution)
 <!-- CONSTITUTION_END -->
 
 ## ✨ Features

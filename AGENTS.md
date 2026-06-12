@@ -1,23 +1,10 @@
 # AGENTS.md
 
-## Purpose
+This repository follows Eric's Engineering Constitution.
 
-This repository contains a local desktop quiz simulator for **ISTQB CTFL v4.0** exam practice.
+## Before Beginning Work
 
-Agents working in this repo should optimize for:
-
-- correctness of testing concepts
-- maintainability of Python code
-- preserving the sourced-question workflow
-- keeping UI behavior stable while improving structure
-
-This repository also contains a reusable **project-improvement and dataset-integration toolkit**. Agents may improve that toolkit, but should avoid letting toolkit work destabilize the simulator itself.
-
-## Engineering Constitution
-
-This repository follows the Engineering Constitution through the `constitution/` submodule.
-
-Before making changes, read:
+Read:
 
 - `constitution/CONSTITUTION.md`
 - `constitution/AI_WORKFLOW.md`
@@ -31,95 +18,25 @@ Before making changes, read:
 - `TODO.md`
 - `CHANGELOG.md`
 
-Apply the constitution in the context of this repository's existing domain rules. The project-specific guidance below remains authoritative for ISTQB simulator architecture, question provenance, verification commands, and documentation alignment.
+## Required Work Habits
 
-## Architecture
+- Understand the task before changing files.
+- Create an implementation plan for non-trivial work.
+- Follow existing project conventions.
+- Keep changes focused.
+- Add or update automated tests for behavior changes.
+- Update documentation when behavior, setup, usage, architecture, or operations change.
+- Update TODO.md with discovered work or completed roadmap items.
+- Update CHANGELOG.md for user-facing changes.
+- Review security impact before completing work.
+- Suggest future improvements when useful.
 
-- `ISTQBQuizApp.py`
-  Tkinter UI and orchestration only.
-- `exam_models.py`
-  Pure exam-state logic. Prefer adding business rules here instead of embedding them in the UI.
-- `exam_storage.py`
-  Question loading, validation, randomized exam assembly, history-entry normalization, and history persistence.
-- `cli_quiz.py`
-  Terminal UI built on the same exam-state and storage layers as the desktop app.
-- `ui_layout.py`
-  Pure responsive-layout helper logic for the Tkinter app.
-- `merge_scaffold.py`
-  Generic merge CLI scaffold for combining multiple source datasets into one normalized output.
-- `question_bank.json`
-  Externalized question pool. Do not hardcode new question content into Python.
-- `test_istqb_quiz_app.py`
-  Unit tests for non-UI logic.
+## Before Completing Work
 
-Supporting docs worth keeping aligned:
-
-- `README.md`
-- `ARCHITECTURE.md`
-- `TESTING.md`
-- `TEST_PLAN.md`
-- `SOFTWARE_REQUIREMENTS.md`
-- `REQUIREMENTS_TRACEABILITY_MATRIX.md`
-- `CONTRIBUTING.md`
-- `TODO.md`
-- `CHANGELOG.md`
-- `docs/adr/`
-- `COPILOT_TASK_BACKLOG.md`
-- `PROJECT_EVOLUTION_FRAMEWORK.md`
-- `DATASET_INTEGRATION_PLAYBOOK.md`
-- `MERGE_CLI_GUIDE.md`
-
-## Working Rules
-
-- Inspect the current repo state before changing structure or docs.
-- Prefer changes that keep domain logic out of Tkinter callbacks.
-- Add or update unit tests when changing behavior in `exam_models.py` or `exam_storage.py`.
-- Update the requirements traceability matrix when adding, removing, or materially changing requirements or tests.
-- Update `TODO.md` when discovering or completing roadmap work.
-- Update `CHANGELOG.md` for user-facing changes.
-- Add ADRs under `docs/adr/` for major framework, architecture, data, or security decisions.
-- Keep requirements testable and assign stable requirement IDs for new behavior.
-- If changing merge behavior, keep `merge_scaffold.py`, `MERGE_CLI_GUIDE.md`, and the dataset toolkit docs consistent.
-- Treat question provenance as important. New questions should be source-backed and traceable.
-- Preserve answer correctness when shuffling options.
-- Avoid introducing dependencies unless there is a strong justification.
-- Keep the app runnable with a simple `python ISTQBQuizApp.py`.
-- Use the `automagic` agent or `/automagic` prompt as the default workflow for meaningful changes.
-- Do not treat README, testing docs, or traceability updates as optional when the change affects workflows, automation, or user-visible behavior.
-
-Preferred change order:
-
-1. correctness
-2. structure/testability
-3. tests
-4. docs
-5. UI polish
-6. feature expansion
-
-## Documentation Rules
-
-- Use Markdown for repository docs.
-- Use Google-style Python docstrings for modules, classes, and non-trivial functions.
-- Keep comments high signal. Do not add line-by-line narration comments.
-- When architecture or workflow changes, update the related markdown docs in the same change.
-- Keep constitution-facing files aligned with existing SQA docs rather than duplicating conflicting guidance.
-
-## Verification
-
-Before finishing meaningful code changes, run:
-
-```powershell
-python -m unittest -v
-python -m py_compile ISTQBQuizApp.py cli_quiz.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py ui_layout.py
-```
-
-Also ensure the relevant specialist reviewers from the Copilot review stack have been used and their required doc/test updates addressed.
-
-## Preferred Improvement Priorities
-
-1. Correctness
-2. Testability
-3. Maintainability
-4. Documentation accuracy
-5. UI polish
-6. New features
+- Review documentation impact.
+- Review testing impact.
+- Update TODO.md.
+- Update CHANGELOG.md.
+- Perform a security review.
+- Report tests run and any tests not run.
+- Summarize work clearly.

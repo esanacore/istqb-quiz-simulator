@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This repository follows the Engineering Constitution.
+This repository follows Eric's Engineering Constitution.
 
 ## Required Reading
 
@@ -14,12 +14,6 @@ Before making changes, read:
 - `README.md`
 - `TODO.md`
 - `CHANGELOG.md`
-- `AGENTS.md`
-- `ARCHITECTURE.md`
-- `TESTING.md`
-- `TEST_PLAN.md`
-- `REQUIREMENTS_TRACEABILITY_MATRIX.md`
-- `COPILOT_TASK_BACKLOG.md`
 
 ## Completion Checklist
 
@@ -30,7 +24,6 @@ Before completing work:
 - Update documentation when needed.
 - Update TODO.md with discovered or completed work.
 - Update CHANGELOG.md for user-facing changes.
-- Update requirements traceability when requirements or tests change.
 - Consider security impact.
 - Identify useful follow-up work.
 - Summarize changes and verification.

@@ -4,28 +4,9 @@ A desktop exam simulator for **ISTQB Certified Tester Foundation Level (CTFL v4.
 
 It is designed to feel closer to a real exam session than a simple flashcard app: timed attempts, randomized 40-question exams, answer shuffling, mark-for-review workflow, attempt history, and detailed post-exam explanations sourced from official sample materials.
 
-## Engineering Constitution
-
-This repository follows the shared Engineering Constitution through the `constitution/` Git submodule.
-
-The constitution provides project-wide standards for:
-
-- AI-assisted development workflow
-- testing expectations
-- documentation quality
-- TODO and changelog maintenance
-- security review
-- architecture decision records
-
-Project-specific guidance remains in [AGENTS.md](AGENTS.md), [ARCHITECTURE.md](ARCHITECTURE.md), [TESTING.md](TESTING.md), and the SQA artifacts listed below.
-
-For future work:
-
-1. Read [AGENTS.md](AGENTS.md).
-2. Read the relevant files in `constitution/`.
-3. Update [TODO.md](TODO.md) when roadmap items are discovered or completed.
-4. Update [CHANGELOG.md](CHANGELOG.md) for user-facing changes.
-5. Record major design decisions in [docs/adr/](docs/adr/).
+<!-- CONSTITUTION_START -->
+[![Eric's Engineering Constitution](https://img.shields.io/badge/Eric's%20Engineering%20Constitution-Adopted-blue)](constitution/CONSTITUTION.md)
+<!-- CONSTITUTION_END -->
 
 ## ✨ Features
 

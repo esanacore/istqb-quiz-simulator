@@ -12,3 +12,4 @@ exam_history.json
 .DS_Store
 Thumbs.db
 .idea/
+node_modules/

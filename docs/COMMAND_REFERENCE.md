@@ -1,24 +1,40 @@
 # Command Reference
 
-This document provides a quick reference for common commands used in this project.
+Run every command from the repository root.
 
-## Development
+## Core App Commands
 
-- `npm run dev`: Start the development server.
-- `npm run build`: Build the project for production.
+- `python ISTQBQuizApp.py`
+  Starts the Tkinter desktop simulator.
+- `python cli_quiz.py`
+  Starts the terminal-first simulator. On Windows, prefer a UTF-8 console:
+  `$env:PYTHONIOENCODING='utf-8'; $env:PYTHONUTF8='1'`.
 
-## Testing
+## Test And Validation Commands
 
-- `npm test`: Run all tests.
-- `npm run test:watch`: Run tests in watch mode.
-- `npm run test:coverage`: Run tests and generate a coverage report.
+- `python -m unittest -v`
+  Runs the full automated test suite in `test_istqb_quiz_app.py`.
+- `python -m py_compile ISTQBQuizApp.py cli_quiz.py exam_models.py exam_storage.py test_istqb_quiz_app.py merge_scaffold.py ui_layout.py`
+  Verifies that the main Python modules compile cleanly.
 
-## Linting & Formatting
+## Dataset Toolkit
 
-- `npm run lint`: Run the linter.
-- `npm run format`: Format the code.
+- `python merge_scaffold.py dataset_merge_config.template.json`
+  Runs the generic JSON merge workflow and writes outputs under `merge_output/`
+  unless the config overrides the destination.
 
-## Operations
+## Constitution Checks
 
-- `npm start`: Start the production server.
-- <!-- Add more project-specific commands here -->
+- `"C:\Program Files\Git\bin\bash.exe" constitution/scripts/check_compliance.sh --strict .`
+  Verifies that the repository carries the expected Constitution files.
+- `"C:\Program Files\Git\bin\bash.exe" constitution/scripts/check_version_alignment.sh`
+  Verifies that local governance files do not mention stale Constitution
+  versions after a submodule update.
+
+## Git And Submodule Maintenance
+
+- `git submodule update --init --recursive`
+  Initializes or refreshes the pinned Constitution checkout.
+- `git submodule update --remote constitution`
+  Moves the submodule to the latest remote-tracked commit; review and validate
+  before committing.

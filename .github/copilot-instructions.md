@@ -82,6 +82,7 @@ When generating tests:
 - Keep architecture, testing, and contribution docs aligned with the current code layout.
 - Keep requirements testable and mapped to automated/manual verification.
 - Update `README.md` when a change affects project structure, workflows, automation, or contributor experience.
+- Keep the demo page current — when a change alters user-facing behavior and the repository has a `demo.html`, update it in the same change; a demo still showing the old behavior is an incomplete change (`constitution/DOCUMENTATION.md`, "Demo Page").
 
 ## Content Guidance
 

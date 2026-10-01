@@ -13,3 +13,20 @@ exam_history.json
 Thumbs.db
 .idea/
 node_modules/
+
+# Secret-shaped files (constitution SECURITY.md; scripts/check_secrets.sh --strict)
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+credentials.json
+*service-account*.json
+.netrc
+terraform.tfstate
+terraform.tfstate.backup

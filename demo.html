@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ISTQB CTFL Quiz Simulator - Browser Demo</title>
+  <meta name="description" content="Take a short sample exam in a browser re-creation of the ISTQB CTFL v4.0 Quiz Simulator, a Python + Tkinter desktop app.">
+  <style>
+    /* Palette mirrors the constants at the top of ISTQBQuizApp.py (light mode). */
+    :root {
+      color-scheme: light dark;
+      --bg: #f4efe6;
+      --panel: #fffaf2;
+      --accent: #1f5f5b;
+      --accent-hover: #184d49;
+      --accent-soft: #d7ebe6;
+      --text: #1f2933;
+      --muted: #52606d;
+      --warning: #a16207;
+      --success: #2f855a;
+      --danger-soft: #f3d9d9;
+      --review-bg: #fff1bf;
+      --mark: #efe3b1;
+      --mark-on: #f2c94c;
+      --nav-current: #1f5f5b;
+      --nav-current-text: #ffffff;
+      --nav-answered: #d7ebe6;
+      --nav-marked: #f6d365;
+      --nav-empty: #e5e7eb;
+      --border: #d9d1c3;
+      --chrome: #e7e0d3;
+      --sim: #7c2d12;
+      --sim-bg: #ffedd5;
+      --shadow: 0 10px 30px rgba(31, 41, 51, 0.12);
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #14181b;
+        --panel: #1d2327;
+        --accent: #3fa39b;
+        --accent-hover: #4fb8af;
+        --accent-soft: #23413e;
+        --text: #e8eaec;
+        --muted: #a3adb6;
+        --warning: #f0b44c;
+        --success: #5fd08f;
+        --danger-soft: #4a2a2a;
+        --review-bg: #3b3218;
+        --mark: #4a4120;
+        --mark-on: #8a6d12;
+        --nav-current: #3fa39b;
+        --nav-current-text: #0d1416;
+        --nav-answered: #23413e;
+        --nav-marked: #8a6d12;
+        --nav-empty: #2c3338;
+        --border: #333c42;
+        --chrome: #262d32;
+        --sim: #fdba74;
+        --sim-bg: #3a2414;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.55;
+    }
+    a { color: var(--accent); }
+    code { font-family: var(--mono); font-size: 0.9em; }
+    .wrap { width: min(100%, 1120px); margin: 0 auto; padding: 0 16px; }
+
+    /* Simulation banner */
+    .sim-banner {
+      background: var(--sim-bg);
+      color: var(--sim);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.92rem;
+    }
+    .sim-banner .wrap { padding-top: 10px; padding-bottom: 10px; display: flex; gap: 10px; align-items: flex-start; }
+    .badge {
+      display: inline-block;
+      flex: none;
+      padding: 2px 9px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.6;
+    }
+    .badge.sim { color: var(--sim); background: transparent; }
+    .badge.real { color: var(--success); }
+
+    header.hero { padding: 36px 0 12px; }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 4.5vw, 2.7rem);
+      margin: 0 0 8px;
+      letter-spacing: -0.01em;
+    }
+    .hero p.lead { margin: 0 0 18px; max-width: 70ch; color: var(--muted); font-size: 1.05rem; }
+
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+      margin: 18px 0 28px;
+      padding: 0;
+      list-style: none;
+    }
+    .facts li {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 0.92rem;
+    }
+    .facts strong { display: block; margin-bottom: 4px; font-size: 0.98rem; }
+    .facts span { color: var(--muted); }
+
+    h2 { font-family: var(--serif); font-size: 1.5rem; margin: 34px 0 10px; }
+
+    /* ---------- App window ---------- */
+    .window {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background: var(--bg);
+    }
+    .titlebar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: var(--chrome);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .titlebar .dots { display: flex; gap: 6px; }
+    .titlebar .dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--border); display: block; }
+    .titlebar .name { flex: 1; text-align: center; font-weight: 600; color: var(--text); }
+
+    .app { padding: 18px 20px 20px; }
+    .app-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px 24px;
+      margin-bottom: 14px;
+    }
+    .app-header h3 { font-family: var(--serif); font-size: 1.45rem; margin: 0; }
+    .app-header .sub { margin: 2px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .stats { text-align: right; font-size: 0.9rem; }
+    .stats .timer { font-family: var(--serif); font-weight: 700; font-size: 1.1rem; color: var(--accent); }
+    .stats .timer.low { color: var(--warning); }
+    .stats div { color: var(--muted); }
+    .progress { font-size: 0.88rem; color: var(--muted); margin: 0 0 12px; }
+
+    .exam {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 250px;
+      gap: 16px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--accent-soft);
+      border-radius: 8px;
+      padding: 18px 20px;
+      transition: background 0.15s ease;
+    }
+    .card.marked { background: var(--review-bg); }
+    .qnum { font-family: var(--serif); font-weight: 700; color: var(--accent); margin: 0 0 6px; }
+    .qtext { font-size: 1.08rem; margin: 0 0 14px; }
+    fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+    .opt {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 11px 12px;
+      margin: 0 0 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .opt:hover { border-color: var(--accent-soft); }
+    .opt input { margin-top: 4px; accent-color: var(--accent); width: 17px; height: 17px; flex: none; }
+    .opt.sel { background: var(--accent-soft); }
+
+    aside.nav {
+      background: var(--panel);
+      border: 1px solid var(--accent-soft);
+      border-radius: 8px;
+      padding: 14px;
+      align-self: start;
+    }
+    aside.nav h4 { font-family: var(--serif); margin: 0; font-size: 1.05rem; }
+    aside.nav p { margin: 2px 0 10px; color: var(--muted); font-size: 0.8rem; }
+    .map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .map button {
+      font: inherit;
+      font-weight: 600;
+      padding: 8px 0;
+      border: 0;
+      border-radius: 5px;
+      background: var(--nav-empty);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .map button.answered { background: var(--nav-answered); }
+    .map button.marked { background: var(--nav-marked); }
+    .map button.current { background: var(--nav-current); color: var(--nav-current-text); }
+    .legend { list-style: none; margin: 12px 0 8px; padding: 0; font-size: 0.8rem; color: var(--muted); }
+    .legend li { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+    .legend i { width: 18px; height: 12px; border-radius: 3px; display: inline-block; }
+    .nav-summary { white-space: pre-line; font-size: 0.82rem; color: var(--muted); margin: 0; }
+
+    .footer-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: var(--panel);
+      border: 1px solid var(--accent-soft);
+      border-radius: 8px;
+    }
+    .footer-bar .spacer { flex: 1; }
+    .btn {
+      font: inherit;
+      font-weight: 600;
+      font-size: 0.92rem;
+      padding: 9px 14px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: var(--accent-soft);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .btn:hover:not(:disabled) { filter: brightness(0.96); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn.primary { background: var(--accent); color: #ffffff; }
+    .btn.primary:hover:not(:disabled) { background: var(--accent-hover); filter: none; }
+    @media (prefers-color-scheme: dark) { .btn.primary { color: #0d1416; } }
+    .btn.mark { background: var(--mark); }
+    .btn.mark.on { background: var(--mark-on); }
+    .btn.ghost { background: var(--panel); border-color: var(--border); }
+    .btn.danger { background: var(--danger-soft); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* Dialogs */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 14, 18, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 10;
+    }
+    .overlay.open { display: flex; }
+    .dialog {
+      width: min(100%, 720px);
+      max-height: calc(100vh - 32px);
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .dialog.small { width: min(100%, 400px); }
+    .dialog .body { padding: 16px 20px; overflow: auto; }
+    .dialog .actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 20px 16px; border-top: 1px solid var(--border); }
+    .dialog .actions .spacer { flex: 1; }
+    .dialog p { margin: 0 0 8px; }
+    .summary {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 1.25rem;
+      text-align: center;
+      margin: 4px 0 12px;
+    }
+    .summary.pass { color: var(--success); }
+    .summary.fail { color: var(--warning); }
+    .report { list-style: none; margin: 0; padding: 0; }
+    .report li {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--warning);
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin: 0 0 10px;
+      font-size: 0.92rem;
+    }
+    .report li.ok { border-left-color: var(--success); }
+    .report .st { font-weight: 700; }
+    .report li.ok .st { color: var(--success); }
+    .report li.bad .st { color: var(--warning); }
+    .report .qline { margin: 4px 0 6px; }
+    .report dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 2px 10px; }
+    .report dt { color: var(--muted); }
+    .report dd { margin: 0; }
+    .report .src { color: var(--muted); font-style: italic; }
+
+    table.hist { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    table.hist th { background: var(--accent-soft); text-align: left; padding: 7px 8px; }
+    table.hist td { padding: 7px 8px; border-bottom: 1px solid var(--border); background: var(--panel); }
+    table.hist td.c, table.hist th.c { text-align: center; }
+    .empty { color: var(--muted); font-style: italic; }
+    .note { font-size: 0.84rem; color: var(--muted); }
+
+    /* Lower sections */
+    .two {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .box h3 { margin: 0 0 8px; font-size: 1.05rem; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .box ul { margin: 0; padding-left: 20px; }
+    .box li { margin: 4px 0; }
+    pre.cmd {
+      background: var(--chrome);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 0.86rem;
+      margin: 8px 0;
+    }
+    footer.page { margin: 40px 0 32px; color: var(--muted); font-size: 0.84rem; }
+    footer.page p { margin: 0 0 8px; max-width: 90ch; }
+
+    @media (max-width: 760px) {
+      .exam { grid-template-columns: minmax(0, 1fr); }
+      .map { grid-template-columns: repeat(8, 1fr); }
+      .stats { text-align: left; }
+      .app { padding: 14px 12px 14px; }
+      .card { padding: 14px 14px; }
+      .footer-bar .spacer { display: none; }
+      .footer-bar .btn { flex: 1 1 auto; }
+    }
+    @media (max-width: 420px) {
+      .map { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="sim-banner" role="note">
+    <div class="wrap">
+      <span class="badge sim">Simulated</span>
+      <span>This page is a <strong>browser re-creation</strong> of a Python + Tkinter desktop app. The questions, scoring rule, and explanations are copied from the real project; the window around them is HTML. Attempt history here lasts only until you reload, and the full question bank, 40-question exams, and the CLI need the real app.</span>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <header class="hero">
+      <h1>ISTQB CTFL Quiz Simulator</h1>
+      <p class="lead">A desktop practice-exam simulator for the ISTQB Certified Tester Foundation Level (CTFL v4.0) syllabus. It builds randomized, timed exams from a sourced question bank, lets you mark questions for review, and explains every answer when you submit.</p>
+      <ul class="facts">
+        <li><strong>Real in this demo</strong><span>12 questions copied unchanged from the repo's <code>question_bank.json</code>, with their explanations and source references, plus the app's 65% pass mark.</span></li>
+        <li><strong>Scaled down</strong><span>The app draws 40 questions from its 96-question bank with a 60-minute timer. This demo draws 8 of the 12 with a 12-minute timer (the same 90 seconds per question).</span></li>
+        <li><strong>Not here</strong><span>History saved to <code>exam_history.json</code>, JSON/CSV export, and the terminal mode in <code>cli_quiz.py</code>. Those need Python 3.12+ and the repository.</span></li>
+      </ul>
+    </header>
+
+    <h2>Take a short sample exam</h2>
+    <p class="note">Pick answers, jump around with the question map, mark anything you want to revisit, then press <strong>SUBMIT EXAM</strong> to see your score and the explanation for every question.</p>
+
+    <section class="window" aria-label="Simulated ISTQB CTFL v4.0 Simulator window">
+      <div class="titlebar">
+        <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="name">ISTQB CTFL v4.0 Simulator</span>
+        <span class="badge sim">Simulated</span>
+      </div>
+      <div class="app">
+        <div class="app-header">
+          <div>
+            <h3>ISTQB CTFL v4.0 Simulator</h3>
+            <p class="sub">Randomized exam practice from official ISTQB sample materials</p>
+          </div>
+          <div class="stats">
+            <div class="timer" id="timer" aria-live="off">Time Remaining: 12:00</div>
+            <div id="sessionLabel">History: 0 Attempts (0 Pass)</div>
+            <div id="bankLabel">Bank: 12 Questions | Exam: 8 Randomized</div>
+          </div>
+        </div>
+        <p class="progress" id="progressLabel">Answered: 0 | Marked: 0 | Remaining: 8</p>
+
+        <div class="exam">
+          <div class="card" id="card">
+            <p class="qnum" id="qnum">Question 1 of 8</p>
+            <p class="qtext" id="qtext"></p>
+            <fieldset id="options">
+              <legend class="note" style="position:absolute;left:-9999px">Answer options</legend>
+            </fieldset>
+          </div>
+          <aside class="nav" aria-label="Question map">
+            <h4>Question Map</h4>
+            <p>Jump to any question and track answered or marked items.</p>
+            <div class="map" id="map"></div>
+            <ul class="legend">
+              <li><i style="background:var(--nav-current)"></i>Current</li>
+              <li><i style="background:var(--nav-answered)"></i>Answered</li>
+              <li><i style="background:var(--nav-marked)"></i>Marked for review</li>
+              <li><i style="background:var(--nav-empty)"></i>Unanswered</li>
+            </ul>
+            <p class="nav-summary" id="navSummary"></p>
+          </aside>
+        </div>
+
+        <div class="footer-bar">
+          <button class="btn" id="backBtn" type="button">&lt;&lt; Back</button>
+          <button class="btn mark" id="markBtn" type="button">Mark for Review</button>
+          <button class="btn" id="nextBtn" type="button">Next &gt;&gt;</button>
+          <span class="spacer"></span>
+          <button class="btn primary" id="submitBtn" type="button">SUBMIT EXAM</button>
+          <button class="btn ghost" id="historyBtn" type="button">History</button>
+        </div>
+      </div>
+    </section>
+
+    <h2>What the real app adds</h2>
+    <div class="two">
+      <div class="box">
+        <h3>Desktop app <span class="badge real">Real</span></h3>
+        <ul>
+          <li>96 adapted questions from ISTQB CTFL v4.0 Sample Exams A, B, C and D.</li>
+          <li>40-question randomized exams with a 60-minute countdown that submits automatically at zero.</li>
+          <li>Answer order reshuffled every attempt while keeping the correct answer intact.</li>
+          <li>Attempt history saved locally in <code>exam_history.json</code>, shown newest first, with delete, clear, and JSON/CSV export.</li>
+        </ul>
+        <pre class="cmd">python ISTQBQuizApp.py</pre>
+      </div>
+      <div class="box">
+        <h3>Terminal mode <span class="badge real">Real</span></h3>
+        <ul>
+          <li>The same exam and history logic in <code>cli_quiz.py</code>, with ANSI styling, a progress bar, and a question map.</li>
+          <li>Commands such as <code>review</code>, <code>history</code>, <code>export-json</code>, <code>export-csv</code>, <code>restart</code>, and <code>help</code>.</li>
+          <li>Not re-created on this page.</li>
+        </ul>
+        <pre class="cmd">python cli_quiz.py</pre>
+        <p class="note">Both need Python 3.12 or later and a clone of the repository. Tkinter ships with most Python installers.</p>
+      </div>
+    </div>
+
+    <footer class="page">
+      <p><strong>Question sources.</strong> Every question on this page is an adapted version of a question from the official ISTQB&reg; CTFL v4.0 sample exams, as stored in the project's <code>question_bank.json</code>. The source line under each explanation names the exact sample exam and question. ISTQB&reg; is a registered trademark of the International Software Testing Qualifications Board, which holds the copyright to the original sample exams. Get the originals from the ISTQB CTFL v4.0 certification page on istqb.org.</p>
+      <p>This is a study simulator for practice only. It is not an official ISTQB exam product, and a score here does not predict a certification result.</p>
+    </footer>
+  </div>
+
+  <!-- Confirm submission -->
+  <div class="overlay" id="confirmOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="dialog small">
+      <div class="body">
+        <p id="confirmTitle"><strong>Confirm Submission</strong></p>
+        <p>Are you sure you want to submit?</p>
+        <p id="confirmCounts" style="white-space:pre-line"></p>
+      </div>
+      <div class="actions">
+        <span class="spacer"></span>
+        <button class="btn ghost" id="confirmNo" type="button">No</button>
+        <button class="btn primary" id="confirmYes" type="button">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="overlay" id="resultsOverlay" role="dialog" aria-modal="true" aria-labelledby="resultsTitle">
+    <div class="dialog">
+      <div class="body">
+        <p id="resultsTitle" class="note">Results &amp; Explanation <span class="badge sim">Simulated window</span></p>
+        <div class="summary" id="summary"></div>
+        <ul class="report" id="report"></ul>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="restartBtn" type="button">Restart Test</button>
+        <span class="spacer"></span>
+        <button class="btn ghost" id="closeResults" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="overlay" id="historyOverlay" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+    <div class="dialog">
+      <div class="body">
+        <p id="historyTitle" class="summary" style="text-align:left">Attempt History</p>
+        <p class="note"><span class="badge sim">Simulated</span> Kept in this page's memory only and gone when you reload. The desktop app saves history to <code>exam_history.json</code> and can export it to JSON or CSV.</p>
+        <div id="historyTable"></div>
+      </div>
+      <div class="actions">
+        <button class="btn danger" id="deleteHist" type="button">Delete Selected</button>
+        <button class="btn danger" id="clearHist" type="button">Clear History</button>
+        <button class="btn ghost" type="button" disabled title="Needs the desktop app">Export JSON</button>
+        <button class="btn ghost" type="button" disabled title="Needs the desktop app">Export CSV</button>
+        <span class="spacer"></span>
+        <button class="btn primary" id="closeHist" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    // Copied unchanged from question_bank.json in this repository (12 of 96 entries).
+    var SAMPLE_BANK = [
+      {
+        "q": "Which is a valid objective of testing?",
+        "options": [
+          "Prove the system has no remaining defects.",
+          "Guarantee no failures will happen in production.",
+          "Reduce product risk and increase confidence in quality.",
+          "Show that every possible input combination has been tested."
+        ],
+        "answer": "Reduce product risk and increase confidence in quality.",
+        "explanation": "Testing helps identify defects and failures, lowering risk and increasing confidence. It cannot prove the total absence of defects or exhaustively cover all combinations.",
+        "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 1"
+      },
+      {
+        "q": "A regression suite has been reused unchanged for many iterations and has stopped finding new defects. Which testing principle best explains why this is a problem?",
+        "options": [
+          "Tests wear out",
+          "Absence-of-defects fallacy",
+          "Defect clustering",
+          "Exhaustive testing is impossible"
+        ],
+        "answer": "Tests wear out",
+        "explanation": "Repeatedly running the same regression tests without refreshing them eventually reduces their ability to uncover new defects.",
+        "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question 3"
+      },
+      {
+        "q": "A wine storage controller reports whether temperature is optimal at 12 degrees, too low below 12, and too high above 12. Using 3-point boundary value analysis, what is the minimal test set?",
+        "options": [
+          "11, 12, 13",
+          "10, 12, 14",
+          "10, 11, 12, 13, 14",
+          "10, 11, 13, 14"
+        ],
+        "answer": "10, 11, 12, 13, 14",
+        "explanation": "With 3-point BVA around the effective boundaries 11, 12, and 13, you need the boundary values and their neighbors, which yields 10 through 14.",
+        "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A15"
+      },
+      {
+        "q": "Which statement about the test pyramid is true?",
+        "options": [
+          "It recommends far more tests at lower test levels.",
+          "It suggests each low-level test should cover a large amount of functionality.",
+          "It mainly describes how test types are distributed across the SDLC.",
+          "It has no impact on automated test design."
+        ],
+        "answer": "It recommends far more tests at lower test levels.",
+        "explanation": "The test pyramid emphasizes many lower-level automated tests and fewer higher-level tests.",
+        "source": "Adapted from ISTQB CTFL v4.0 Sample Exam A v1.7, Question A21"
+      },
+      {
+        "q": "Which test activity works directly with test data requirements, test conditions, test environment requirements, and test cases?",
+        "options": [
+          "Test design",
+          "Test execution",
+          "Test analysis",
+          "Test monitoring"
+        ],
+        "answer": "Test design",
+        "explanation": "Test design uses test conditions to derive test cases and related testware such as test data needs and environment requirements.",
+        "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 4"
+      },
+      {
+        "q": "Which defect can static testing find but dynamic testing cannot directly reveal?",
+        "options": [
+          "A usability problem in the interface",
+          "Code that no possible execution path can reach",
+          "Poor response time under expected user load",
+          "A required feature missing from the implementation"
+        ],
+        "answer": "Code that no possible execution path can reach",
+        "explanation": "Unreachable code can be detected by review or static analysis, but dynamic testing can only execute reachable paths.",
+        "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 15"
+      },
+      {
+        "q": "A loyalty wash program gives no discount on most visits, 10 percent on every tenth visit, and a total of 50 percent on every twentieth visit. Which set of visit counts gives full valid equivalence-partition coverage?",
+        "options": [
+          "19, 20, 30",
+          "11, 12, 20",
+          "1, 10, 50",
+          "29, 30, 31"
+        ],
+        "answer": "19, 20, 30",
+        "explanation": "Those three values cover the no-discount, tenth-wash discount, and twentieth-wash discount partitions.",
+        "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 20"
+      },
+      {
+        "q": "Which statement best distinguishes testing from debugging?",
+        "options": [
+          "Testing causes failures while debugging fixes failures",
+          "Testing is negative while debugging is positive",
+          "Testing determines that defects exist while debugging removes defects",
+          "Testing finds defect causes while debugging fixes those causes"
+        ],
+        "answer": "Testing determines that defects exist while debugging removes defects",
+        "explanation": "Testing reveals defects directly or indirectly. Debugging is a separate activity focused on locating and fixing the defects.",
+        "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 2"
+      },
+      {
+        "q": "If testing is focused on validation and is not performed by testers, which test level is most likely involved?",
+        "options": [
+          "Component testing",
+          "Component integration testing",
+          "System integration testing",
+          "Acceptance testing"
+        ],
+        "answer": "Acceptance testing",
+        "explanation": "Acceptance testing commonly focuses on validation and is often performed by business representatives or end users rather than the test team.",
+        "source": "Adapted from ISTQB CTFL v4.0 Sample Exam C v1.6, Question 13"
+      },
+      {
+        "q": "Which is an example of a test-first development approach?",
+        "options": [
+          "Test-Driven Development",
+          "Coverage-Driven Development",
+          "Quality-Driven Development",
+          "Feature-Driven Development"
+        ],
+        "answer": "Test-Driven Development",
+        "explanation": "TDD is the classic example of creating tests before implementing the production code they drive.",
+        "source": "Adapted from ISTQB CTFL v4.0 Sample Exam B v1.7, Question 11"
+      },
+      {
+        "q": "Which work product cannot be examined effectively by static testing?",
+        "options": [
+          "A contract",
+          "A test plan",
+          "Encrypted code",
+          "A test charter"
+        ],
+        "answer": "Encrypted code",
+        "explanation": "Static testing requires a work product that humans or tools can meaningfully inspect. Properly encrypted code is not practically reviewable in that form.",
+        "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 15"
+      },
+      {
+        "q": "Which review participant is responsible for ensuring meetings run effectively and that everyone can speak freely?",
+        "options": [
+          "Manager",
+          "Moderator",
+          "Chairperson",
+          "Review leader"
+        ],
+        "answer": "Moderator",
+        "explanation": "The moderator or facilitator manages the meeting process, time, and discussion climate so participants can contribute safely and effectively.",
+        "source": "Adapted from ISTQB CTFL v4.0 Sample Exam D v1.5, Question 18"
+      }
+    ];
+
+    var EXAM_SIZE = 8;               // real app: 40
+    var SECONDS_PER_QUESTION = 90;   // real app: 60 minutes / 40 questions
+    var PASSING_PERCENT = 65.0;      // exam_models.PASSING_PERCENT
+
+    var state = null;
+    var attempts = [];
+    var timerId = null;
+    var lastFocus = null;
+
+    function $(id) { return document.getElementById(id); }
+
+    function shuffle(list) {
+      var a = list.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+      return a;
+    }
+
+    // Mirrors exam_storage.build_exam_questions: random sample, options reshuffled, answer kept.
+    function buildExam() {
+      return shuffle(SAMPLE_BANK).slice(0, EXAM_SIZE).map(function (q) {
+        return { q: q.q, options: shuffle(q.options), answer: q.answer, explanation: q.explanation, source: q.source };
+      });
+    }
+
+    function newSession() {
+      var questions = buildExam();
+      state = {
+        questions: questions,
+        current: 0,
+        answers: questions.map(function () { return null; }),
+        marked: questions.map(function () { return false; }),
+        timeLeft: questions.length * SECONDS_PER_QUESTION,
+        submitted: false
+      };
+      buildMap();
+      setControls(true);
+      render();
+      startTimer();
+    }
+
+    function answeredCount() { return state.answers.filter(function (a) { return a !== null; }).length; }
+    function markedCount() { return state.marked.filter(Boolean).length; }
+
+    function buildMap() {
+      var map = $("map");
+      map.textContent = "";
+      state.questions.forEach(function (_, i) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.textContent = String(i + 1);
+        b.addEventListener("click", function () { if (!state.submitted) { state.current = i; render(); } });
+        map.appendChild(b);
+      });
+    }
+
+    function render() {
+      var i = state.current;
+      var q = state.questions[i];
+      var total = state.questions.length;
+      $("qnum").textContent = "Question " + (i + 1) + " of " + total;
+      $("qtext").textContent = q.q;
+
+      var box = $("options");
+      Array.prototype.slice.call(box.querySelectorAll(".opt")).forEach(function (n) { n.remove(); });
+      q.options.forEach(function (opt, k) {
+        var label = document.createElement("label");
+        label.className = "opt" + (state.answers[i] === opt ? " sel" : "");
+        var input = document.createElement("input");
+        input.type = "radio";
+        input.name = "answer";
+        input.value = opt;
+        input.id = "opt" + k;
+        input.checked = state.answers[i] === opt;
+        input.disabled = state.submitted;
+        input.addEventListener("change", function () {
+          state.answers[state.current] = opt;
+          render();
+        });
+        var span = document.createElement("span");
+        span.textContent = opt;
+        label.appendChild(input);
+        label.appendChild(span);
+        box.appendChild(label);
+      });
+
+      var marked = state.marked[i];
+      $("card").classList.toggle("marked", marked);
+      $("markBtn").textContent = marked ? "Unmark" : "Mark for Review";
+      $("markBtn").classList.toggle("on", marked);
+
+      Array.prototype.forEach.call($("map").children, function (b, k) {
+        b.className = k === i ? "current" : state.marked[k] ? "marked" : state.answers[k] !== null ? "answered" : "";
+        b.setAttribute("aria-label", "Question " + (k + 1) + (state.answers[k] !== null ? ", answered" : ", unanswered") + (state.marked[k] ? ", marked for review" : ""));
+        if (k === i) { b.setAttribute("aria-current", "true"); } else { b.removeAttribute("aria-current"); }
+      });
+
+      var a = answeredCount(), m = markedCount();
+      $("progressLabel").textContent = "Answered: " + a + " | Marked: " + m + " | Remaining: " + (total - a);
+      $("navSummary").textContent = "Answered: " + a + "/" + total + "\nMarked for review: " + m + "\nUnanswered: " + (total - a);
+      $("bankLabel").textContent = "Bank: " + SAMPLE_BANK.length + " Questions | Exam: " + total + " Randomized";
+      if (!state.submitted) {
+        $("backBtn").disabled = i === 0;
+        $("nextBtn").disabled = i === total - 1;
+      }
+      renderTimer();
+    }
+
+    function renderTimer() {
+      var m = Math.floor(state.timeLeft / 60), s = state.timeLeft % 60;
+      var el = $("timer");
+      el.textContent = "Time Remaining: " + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+      el.classList.toggle("low", state.timeLeft <= 60);
+    }
+
+    function startTimer() {
+      stopTimer();
+      timerId = setInterval(function () {
+        if (state.submitted) { stopTimer(); return; }
+        state.timeLeft = Math.max(0, state.timeLeft - 1);
+        renderTimer();
+        if (state.timeLeft === 0) { submit(true); }
+      }, 1000);
+    }
+    function stopTimer() { if (timerId !== null) { clearInterval(timerId); timerId = null; } }
+
+    function setControls(enabled) {
+      ["backBtn", "nextBtn", "markBtn", "submitBtn"].forEach(function (id) { $(id).disabled = !enabled; });
+      Array.prototype.forEach.call($("map").children, function (b) { b.disabled = !enabled; });
+    }
+
+    function openOverlay(id, focusId) {
+      lastFocus = document.activeElement;
+      $(id).classList.add("open");
+      if (focusId) { $(focusId).focus(); }
+    }
+    function closeOverlay(id) {
+      $(id).classList.remove("open");
+      if (lastFocus && lastFocus.focus) { lastFocus.focus(); }
+    }
+
+    function confirmSubmit() {
+      if (state.submitted) { return; }
+      var unanswered = state.answers.filter(function (a) { return a === null; }).length;
+      $("confirmCounts").textContent = "Unanswered: " + unanswered + "\nMarked for Review: " + markedCount();
+      openOverlay("confirmOverlay", "confirmYes");
+    }
+
+    function pad(n) { return (n < 10 ? "0" : "") + n; }
+    function stamp(d) {
+      return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+    }
+
+    // Mirrors ExamSession.build_result + exam_storage.build_history_entry.
+    function submit(timedOut) {
+      if (state.submitted) { return; }
+      state.submitted = true;
+      stopTimer();
+      setControls(false);
+      render();
+
+      var score = 0;
+      var report = $("report");
+      report.textContent = "";
+      state.questions.forEach(function (q, i) {
+        var pick = state.answers[i];
+        var ok = pick === q.answer;
+        if (ok) { score += 1; }
+        var li = document.createElement("li");
+        li.className = ok ? "ok" : "bad";
+        var head = document.createElement("div");
+        var st = document.createElement("span");
+        st.className = "st";
+        st.textContent = "Q" + (i + 1) + ": " + (ok ? "CORRECT" : "WRONG");
+        head.appendChild(st);
+        var ql = document.createElement("div");
+        ql.className = "qline";
+        ql.textContent = q.q;
+        var dl = document.createElement("dl");
+        [["Your Answer", pick === null ? "None" : pick], ["Correct Answer", q.answer], ["Explanation", q.explanation], ["Source", q.source]].forEach(function (row) {
+          var dt = document.createElement("dt"); dt.textContent = row[0];
+          var dd = document.createElement("dd"); dd.textContent = row[1];
+          if (row[0] === "Source") { dd.className = "src"; }
+          dl.appendChild(dt); dl.appendChild(dd);
+        });
+        li.appendChild(head); li.appendChild(ql); li.appendChild(dl);
+        report.appendChild(li);
+      });
+
+      var total = state.questions.length;
+      var percent = total ? (score / total) * 100 : 0;
+      var passed = percent >= PASSING_PERCENT;
+      var text = "FINAL SCORE: " + score + "/" + total + " (" + percent.toFixed(2) + "%) - " + (passed ? "PASS" : "FAIL");
+      var summary = $("summary");
+      summary.textContent = timedOut ? "TIME EXPIRED - " + text : text;
+      summary.className = "summary " + (passed ? "pass" : "fail");
+
+      attempts.push({ timestamp: stamp(new Date()), score: score, total: total, percent: Math.round(percent * 100) / 100, result: passed ? "PASS" : "FAIL" });
+      refreshHistorySummary();
+      openOverlay("resultsOverlay", "restartBtn");
+    }
+
+    function refreshHistorySummary() {
+      var passes = attempts.filter(function (h) { return h.result === "PASS"; }).length;
+      $("sessionLabel").textContent = "History: " + attempts.length + " Attempts (" + passes + " Pass)";
+    }
+
+    function renderHistory() {
+      var host = $("historyTable");
+      host.textContent = "";
+      if (!attempts.length) {
+        var p = document.createElement("p");
+        p.className = "empty";
+        p.textContent = "No attempts yet. Submit an exam to add one.";
+        host.appendChild(p);
+        return;
+      }
+      var table = document.createElement("table");
+      table.className = "hist";
+      table.innerHTML = "<thead><tr><th class=\"c\"><span style=\"position:absolute;left:-9999px\">Select</span></th><th>Attempt Time</th><th class=\"c\">Score</th><th class=\"c\">Percent</th><th class=\"c\">Result</th></tr></thead>";
+      var tbody = document.createElement("tbody");
+      // Newest first, keeping original indexes for deletion (history_entries_newest_first).
+      attempts.map(function (h, idx) { return [idx, h]; })
+        .sort(function (a, b) { return a[1].timestamp < b[1].timestamp ? 1 : a[1].timestamp > b[1].timestamp ? -1 : b[0] - a[0]; })
+        .forEach(function (pair) {
+          var h = pair[1];
+          var tr = document.createElement("tr");
+          var cells = [null, h.timestamp, h.score + "/" + h.total, h.percent.toFixed(2) + "%", h.result];
+          cells.forEach(function (c, k) {
+            var td = document.createElement("td");
+            if (k === 0) {
+              td.className = "c";
+              var cb = document.createElement("input");
+              cb.type = "checkbox";
+              cb.value = String(pair[0]);
+              cb.setAttribute("aria-label", "Select attempt " + h.timestamp);
+              td.appendChild(cb);
+            } else {
+              td.textContent = c;
+              if (k > 1) { td.className = "c"; }
+            }
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+      table.appendChild(tbody);
+      host.appendChild(table);
+    }
+
+    $("backBtn").addEventListener("click", function () { if (state.current > 0) { state.current -= 1; render(); } });
+    $("nextBtn").addEventListener("click", function () { if (state.current < state.questions.length - 1) { state.current += 1; render(); } });
+    $("markBtn").addEventListener("click", function () { state.marked[state.current] = !state.marked[state.current]; render(); });
+    $("submitBtn").addEventListener("click", confirmSubmit);
+    $("confirmNo").addEventListener("click", function () { closeOverlay("confirmOverlay"); });
+    $("confirmYes").addEventListener("click", function () { $("confirmOverlay").classList.remove("open"); submit(false); });
+    $("restartBtn").addEventListener("click", function () { closeOverlay("resultsOverlay"); newSession(); $("qtext").scrollIntoView({ block: "center" }); });
+    $("closeResults").addEventListener("click", function () { closeOverlay("resultsOverlay"); });
+    $("historyBtn").addEventListener("click", function () { renderHistory(); openOverlay("historyOverlay", "closeHist"); });
+    $("closeHist").addEventListener("click", function () { closeOverlay("historyOverlay"); });
+    $("deleteHist").addEventListener("click", function () {
+      var picked = Array.prototype.map.call($("historyTable").querySelectorAll("input:checked"), function (cb) { return Number(cb.value); });
+      if (!picked.length) { window.alert("Select at least one history entry to remove."); return; }
+      if (!window.confirm("Remove the selected history entries?")) { return; }
+      picked.sort(function (a, b) { return b - a; }).forEach(function (idx) { attempts.splice(idx, 1); });
+      refreshHistorySummary();
+      renderHistory();
+    });
+    $("clearHist").addEventListener("click", function () {
+      if (!attempts.length) { window.alert("There are no history entries to clear."); return; }
+      if (!window.confirm("Remove all stored history entries?")) { return; }
+      attempts = [];
+      refreshHistorySummary();
+      renderHistory();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") { return; }
+      ["confirmOverlay", "historyOverlay", "resultsOverlay"].forEach(function (id) {
+        if ($(id).classList.contains("open")) { closeOverlay(id); }
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".overlay"), function (ov) {
+      ov.addEventListener("click", function (e) { if (e.target === ov) { closeOverlay(ov.id); } });
+    });
+
+    newSession();
+  </script>
+</body>
+</html>

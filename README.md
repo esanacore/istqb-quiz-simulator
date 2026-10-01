@@ -8,6 +8,10 @@ It is designed to feel closer to a real exam session than a simple flashcard app
 [![Eric's Engineering Constitution](https://img.shields.io/badge/Eric's%20Engineering%20Constitution-Adopted-blue)](https://github.com/esanacore/engineering-constitution)
 <!-- CONSTITUTION_END -->
 
+## 🎬 Demo
+
+Open [demo.html](demo.html) in any browser to take a short 8-question sample exam with real questions, explanations, and source references from `question_bank.json`. It is a self-contained browser re-creation of the desktop app (no install, no network); persistent history, export, the full 96-question bank, and the CLI need the real app.
+
 ## ✨ Features
 
 - **Exam-length attempts**: each session builds a randomized `40`-question exam.

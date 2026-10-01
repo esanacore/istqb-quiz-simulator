@@ -11,6 +11,8 @@ This project follows semantic versioning.
 - Added Engineering Constitution integration through the `constitution/` submodule.
 - Added repository-level `TODO.md`, `CHANGELOG.md`, `CLAUDE.md`, `COPILOT_INSTRUCTIONS.md`, and `docs/adr/`.
 - Added exam-history export to JSON/CSV in both desktop history dialog and CLI commands.
+- Added `demo.html`, a self-contained browser demo that re-creates the desktop exam flow (question map, mark for review, submit confirmation, scored review with explanations and sources, session-only history) using 12 questions copied from `question_bank.json`, with simulated parts labeled; linked from `README.md`.
+- Added the "keep the demo page current" rule to every agent instruction file.
 
 ### Changed
 
@@ -21,6 +23,8 @@ This project follows semantic versioning.
 ### Removed
 
 ### Security
+
+- Added secret-shaped file patterns (`.env`, keys, `credentials.json`, `.netrc`, Terraform state) to `.gitignore`.
 
 ## 0.1.0 - Initial Public Baseline
 

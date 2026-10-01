@@ -29,6 +29,7 @@ When making changes, prefer this order:
 - Keep persistence and exam assembly logic in [exam_storage.py](exam_storage.py).
 - Use **Google-style docstrings** for modules, classes, and non-trivial functions.
 - Prefer concise, high-signal comments over excessive inline narration.
+- Keep the demo page current — when a change alters user-facing behavior and the repository has a `demo.html`, update it in the same change; a demo still showing the old behavior is an incomplete change (`constitution/DOCUMENTATION.md`, "Demo Page").
 
 ## Question Content Rules
 

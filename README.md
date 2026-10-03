@@ -10,7 +10,7 @@ It is designed to feel closer to a real exam session than a simple flashcard app
 
 ## 🎬 Demo
 
-Open [demo.html](demo.html) in any browser to take a short 8-question sample exam with real questions, explanations, and source references from `question_bank.json`. It is a self-contained browser re-creation of the desktop app (no install, no network); persistent history, export, the full 96-question bank, and the CLI need the real app.
+Open [demo.html](demo.html) in any browser, or [try it live](https://esanacore.github.io/istqb-quiz-simulator/), to take a short 8-question sample exam with real questions, explanations, and source references from `question_bank.json`. It is a self-contained browser re-creation of the desktop app (no install, no network); persistent history, export, the full 96-question bank, and the CLI need the real app.
 
 ## ✨ Features
 

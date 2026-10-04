@@ -8,6 +8,7 @@ This project follows semantic versioning.
 
 ### Added
 
+- **Demo page published**: `.github/workflows/demo-pages.yml` publishes `demo.html` (and nothing else from the repository) to GitHub Pages at https://esanacore.github.io/istqb-quiz-simulator/ whenever the page changes; the README links the live copy.
 - Added Engineering Constitution integration through the `constitution/` submodule.
 - Added repository-level `TODO.md`, `CHANGELOG.md`, `CLAUDE.md`, `COPILOT_INSTRUCTIONS.md`, and `docs/adr/`.
 - Added exam-history export to JSON/CSV in both desktop history dialog and CLI commands.
